@@ -19,7 +19,7 @@ const fs   = require('fs');
 const path = require('path');
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const PORT    = 3000;
+const PORT = process.env.PORT || 3000;
 const CSV_DIR = path.join(__dirname, 'edges');
                                    // e.g. 'C:/Users/you/nifty/csvs'
                                    // or   '/home/you/project/data'
