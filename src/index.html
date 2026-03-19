@@ -332,7 +332,7 @@ input.ki::placeholder{color:var(--text3)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
 <script>
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
-const API_BASE   = 'http://localhost:3000';
+const API_BASE = 'https://market-impact-graph.onrender.com';
 const CHANNELS   = ['cost_input','credit','demand','industry','investment','regulator','sector','supply_chain'];
 const CNAME      = {cost_input:'Cost input',credit:'Credit',demand:'Demand',industry:'Industry',investment:'Investment',regulator:'Regulator',sector:'Sector',supply_chain:'Supply chain'};
 const EC         = {cost_input:'#f05252',credit:'#8b9eff',demand:'#2dd4bf',industry:'#34d399',investment:'#fb923c',regulator:'#a78bfa',sector:'#8888a0',supply_chain:'#f5a623'};
@@ -355,7 +355,7 @@ let svgSel=null, edgeSel=null, nodeSel=null, simObj=null;
 
 // ── STARTUP — fetch edges from server ────────────────────────────────────────
 async function init() {
-  setLoadMsg('Connecting to server at localhost:3000…');
+  setLoadMsg('Connecting to server…');
   try {
     const res = await fetch(`${API_BASE}/api/edges`);
     if (!res.ok) throw new Error(`Server returned ${res.status}`);
