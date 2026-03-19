@@ -2,7 +2,7 @@
 
 A graph-based system that models how financial events propagate across Nifty50 companies using market data-driven relationships and BFS-based impact diffusion.
 
-Live demo: [https://mayank-golchha.github.io/market-impact-graph](https://mayank-golchha.github.io/market-impact-graph)
+Live : [https://mayank-golchha.github.io/market-impact-graph](https://mayank-golchha.github.io/market-impact-graph)
 
 ---
 
@@ -44,7 +44,7 @@ No account or payment is required for the free tier.
 
 ## How to use
 
-1. Open the live demo link above
+1. Open the website link above
 2. Paste your OpenRouter API key into the field on the left panel
 3. Select a model from the dropdown (Gemini 2.0 Flash is recommended for speed)
 4. Type a financial event in the simulation box, or click one of the preset tags
