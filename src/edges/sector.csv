@@ -1,0 +1,83 @@
+From,To,Mechanism,Category,Strength,Direction,Weight
+ADANIENT,HINDALCO,Mining,Multi-Sector,low,positive,0.4
+ADANIENT,JSWSTEEL,Mining,Multi-Sector,low,positive,0.4
+ADANIENT,LT,Defence,Multi-Sector,low,positive,0.4
+ADANIENT,TATASTEEL,Mining,Multi-Sector,low,positive,0.4
+APOLLOHOSP,HDFCLIFE,Health Insurance,Multi-Sector,low,positive,0.4
+APOLLOHOSP,MAXHEALTH,Diagnostics | Hospitals,Multi-Sector,medium,positive,0.7
+AXISBANK,BAJFINANCE,Insurance,Multi-Sector,low,positive,0.4
+AXISBANK,BAJAJFINSV,Insurance,Multi-Sector,low,positive,0.4
+AXISBANK,HDFCBANK,Corporate Banking | Retail Banking | Wealth Management,Multi-Sector,high,positive,1.0
+AXISBANK,ICICIBANK,Corporate Banking | Retail Banking | Insurance,Multi-Sector,high,positive,1.0
+AXISBANK,JIOFIN,Insurance,Multi-Sector,low,positive,0.4
+AXISBANK,KOTAKBANK,Corporate Banking | Retail Banking | Insurance,Multi-Sector,high,positive,1.0
+AXISBANK,SHRIRAMFIN,Insurance,Multi-Sector,low,positive,0.4
+AXISBANK,SBIN,Corporate Banking | Retail Banking | Insurance,Multi-Sector,high,positive,1.0
+BAJAJ-AUTO,M&M,Electric Vehicles,Multi-Sector,low,positive,0.4
+BAJAJ-AUTO,MARUTI,Electric Vehicles,Multi-Sector,low,positive,0.4
+BAJAJ-AUTO,TATAMOTORS,Electric Vehicles,Multi-Sector,low,positive,0.4
+BAJFINANCE,BAJAJFINSV,Insurance,Multi-Sector,low,positive,0.4
+BAJFINANCE,ICICIBANK,Insurance,Multi-Sector,low,positive,0.4
+BAJFINANCE,JIOFIN,Insurance,Multi-Sector,low,positive,0.4
+BAJFINANCE,KOTAKBANK,Insurance,Multi-Sector,low,positive,0.4
+BAJFINANCE,SHRIRAMFIN,SME Lending | Insurance,Multi-Sector,medium,positive,0.7
+BAJFINANCE,SBIN,Insurance,Multi-Sector,low,positive,0.4
+BAJAJFINSV,ICICIBANK,Asset Management | Insurance,Multi-Sector,medium,positive,0.7
+BAJAJFINSV,JIOFIN,Asset Management | Payments | Insurance | Lending,Multi-Sector,high,positive,1.0
+BAJAJFINSV,KOTAKBANK,Asset Management | Insurance,Multi-Sector,medium,positive,0.7
+BAJAJFINSV,SHRIRAMFIN,Insurance,Multi-Sector,low,positive,0.4
+BAJAJFINSV,SBIN,Asset Management | Insurance,Multi-Sector,medium,positive,0.7
+BHARTIARTL,RELIANCE,Telecom,Multi-Sector,low,positive,0.4
+CIPLA,DRREDDY,Generic Pharmaceuticals | Biosimilars | APIs,Multi-Sector,high,positive,1.0
+CIPLA,SUNPHARMA,Generic Pharmaceuticals | APIs,Multi-Sector,medium,positive,0.7
+COALINDIA,NTPC,Coal Mining,Multi-Sector,low,positive,0.4
+DRREDDY,SUNPHARMA,Generic Pharmaceuticals | OTC Products | APIs,Multi-Sector,high,positive,1.0
+EICHERMOT,MARUTI,Auto Components,Multi-Sector,low,positive,0.4
+EICHERMOT,TATAMOTORS,Commercial Vehicles,Multi-Sector,low,positive,0.4
+GRASIM,JSWSTEEL,Cement | Paints,Multi-Sector,medium,positive,0.7
+GRASIM,LT,Financial Services,Multi-Sector,low,positive,0.4
+GRASIM,M&M,Financial Services,Multi-Sector,low,positive,0.4
+GRASIM,ULTRACEMCO,Cement,Multi-Sector,low,positive,0.4
+HCLTECH,INFY,BPO | Cloud | IT Services,Multi-Sector,high,positive,1.0
+HCLTECH,LT,IT Services,Multi-Sector,low,positive,0.4
+HCLTECH,M&M,IT Services,Multi-Sector,low,positive,0.4
+HCLTECH,TCS,BPO | Cloud | IT Services,Multi-Sector,high,positive,1.0
+HCLTECH,TECHM,BPO | IT Services,Multi-Sector,medium,positive,0.7
+HCLTECH,WIPRO,BPO | Cybersecurity | Engineering R&D | Cloud | IT Services,Multi-Sector,high,positive,1.0
+HDFCBANK,ICICIBANK,Corporate Banking | Retail Banking,Multi-Sector,medium,positive,0.7
+HDFCBANK,KOTAKBANK,Corporate Banking | Retail Banking,Multi-Sector,medium,positive,0.7
+HDFCBANK,SBIN,Corporate Banking | Retail Banking,Multi-Sector,medium,positive,0.7
+HDFCLIFE,SBILIFE,Pension Plans | Life Insurance | Unit Linked Plans,Multi-Sector,high,positive,1.0
+HINDALCO,JSWSTEEL,Mining,Multi-Sector,low,positive,0.4
+HINDALCO,TATASTEEL,Mining,Multi-Sector,low,positive,0.4
+ICICIBANK,JIOFIN,Asset Management | Insurance,Multi-Sector,medium,positive,0.7
+ICICIBANK,KOTAKBANK,Corporate Banking | Insurance | Retail Banking | Securities | Asset Management,Multi-Sector,high,positive,1.0
+ICICIBANK,SHRIRAMFIN,Insurance,Multi-Sector,low,positive,0.4
+ICICIBANK,SBIN,Asset Management | Corporate Banking | Retail Banking | Insurance,Multi-Sector,high,positive,1.0
+INFY,LT,IT Services,Multi-Sector,low,positive,0.4
+INFY,M&M,IT Services,Multi-Sector,low,positive,0.4
+INFY,TCS,BPO | Consulting | Cloud | AI & Automation | IT Services,Multi-Sector,high,positive,1.0
+INFY,TECHM,BPO | AI & Automation | Consulting | IT Services,Multi-Sector,high,positive,1.0
+INFY,WIPRO,BPO | Cloud | IT Services,Multi-Sector,high,positive,1.0
+JSWSTEEL,TATASTEEL,Steel | Mining,Multi-Sector,medium,positive,0.7
+JSWSTEEL,ULTRACEMCO,Cement,Multi-Sector,low,positive,0.4
+JIOFIN,KOTAKBANK,Asset Management | Insurance,Multi-Sector,medium,positive,0.7
+JIOFIN,SHRIRAMFIN,Insurance,Multi-Sector,low,positive,0.4
+JIOFIN,SBIN,Asset Management | Insurance,Multi-Sector,medium,positive,0.7
+KOTAKBANK,SHRIRAMFIN,Insurance,Multi-Sector,low,positive,0.4
+KOTAKBANK,SBIN,Asset Management | Corporate Banking | Retail Banking | Insurance,Multi-Sector,high,positive,1.0
+LT,M&M,Financial Services | IT Services,Multi-Sector,medium,positive,0.7
+LT,TCS,IT Services,Multi-Sector,low,positive,0.4
+LT,TECHM,IT Services,Multi-Sector,low,positive,0.4
+LT,WIPRO,IT Services,Multi-Sector,low,positive,0.4
+M&M,MARUTI,Electric Vehicles,Multi-Sector,low,positive,0.4
+M&M,TCS,IT Services,Multi-Sector,low,positive,0.4
+M&M,TATAMOTORS,Electric Vehicles,Multi-Sector,low,positive,0.4
+M&M,TECHM,IT Services,Multi-Sector,low,positive,0.4
+M&M,WIPRO,IT Services,Multi-Sector,low,positive,0.4
+MARUTI,TATAMOTORS,Passenger Vehicles | Electric Vehicles,Multi-Sector,medium,positive,0.7
+ONGC,RELIANCE,Petrochemicals,Multi-Sector,low,positive,0.4
+SHRIRAMFIN,SBIN,Insurance,Multi-Sector,low,positive,0.4
+TCS,TECHM,BPO | AI & Automation | Consulting | IT Services,Multi-Sector,high,positive,1.0
+TCS,WIPRO,BPO | Cloud | IT Services,Multi-Sector,high,positive,1.0
+TECHM,WIPRO,BPO | IT Services,Multi-Sector,medium,positive,0.7

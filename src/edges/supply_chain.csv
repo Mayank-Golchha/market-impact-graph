@@ -1,0 +1,18 @@
+From,To,Mechanism,Category,Strength,Direction
+ITC,COALINDIA,Coal supply for paper and packaging operations,Supply chain,low,mixed
+LT,ULTRACEMCO,Major cement procurement for infrastructure projects,Supply chain,high,positive
+LT,POWERGRID,EPC contractor for power transmission projects,Supply chain,high,positive
+LT,NTPC,Constructs power plants and infrastructure,Supply chain,high,positive
+LT,ADANIPORTS,Port and logistics infrastructure development,Supply chain,medium,positive
+ASIANPAINT,LT,Paint supply for real estate and infra projects,Supply chain,medium,positive
+SUNPHARMA,RELIANCE,API and petrochemical sourcing linkage,Supply chain,low,positive
+ULTRACEMCO,ADANIPORTS,Port logistics for cement transport,Supply chain,low,positive
+TATASTEEL,LT,Steel supply for construction and infrastructure,Supply chain,high,positive
+JSWSTEEL,LT,Steel supply for large infrastructure projects,Supply chain,high,positive
+HINDALCO,LT,Aluminum supply for engineering and construction,Supply chain,medium,positive
+RELIANCE,ASIANPAINT,Petrochemical inputs for paints production,Supply chain,high,positive
+RELIANCE,ITC,Packaging materials and petrochemical derivatives,Supply chain,medium,positive
+COALINDIA,NTPC,Coal supply for thermal power generation,Supply chain,high,positive
+POWERGRID,NTPC,Power transmission infrastructure linkage,Supply chain,high,positive
+ADANIPORTS,RELIANCE,Port logistics and crude handling infrastructure,Supply chain,medium,positive
+ADANIPORTS,ULTRACEMCO,Logistics support for bulk cement transport,Supply chain,medium,positive

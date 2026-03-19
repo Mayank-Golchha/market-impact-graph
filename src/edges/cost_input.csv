@@ -1,0 +1,9 @@
+From,To,Mechanism,Category,Strength,Direction
+LT,HINDALCO,Aluminum and metals procurement for construction,Cost input,medium,mixed
+LT,JSWSTEEL,Steel procurement for infrastructure projects,Cost input,medium,mixed
+ASIANPAINT,HINDALCO,Aluminum containers and packaging materials procurement,Cost input,low,mixed
+MARUTI,HINDALCO,Aluminum supply for vehicle manufacturing,Cost input,medium,mixed
+MARUTI,TATASTEEL,Steel procurement for vehicle production,Cost input,medium,mixed
+ULTRACEMCO,COALINDIA,Coal and fuel procurement for cement plants,Cost input,medium,mixed
+ULTRACEMCO,POWERGRID,Power supply for energy-intensive cement production,Cost input,low,mixed
+ULTRACEMCO,NTPC,Electricity procurement for manufacturing operations,Cost input,low,mixed

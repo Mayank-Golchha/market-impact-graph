@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Nifty50 Impact Simulator</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0f;--bg2:#111118;--bg3:#1a1a24;
+  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
+  --text:#e8e8f0;--text2:#8888a0;--text3:#454558;
+  --accent:#5b6ef5;--accent2:#8b9eff;
+  --green:#3dd68c;--red:#f05252;--amber:#f5a623;--teal:#2dd4bf;
+  --mono:'IBM Plex Mono',monospace;--sans:'IBM Plex Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;height:100vh;overflow:hidden}
+.shell{display:grid;grid-template-rows:49px 1fr;height:100vh}
+
+/* HEADER */
+header{border-bottom:1px solid var(--border);padding:0 20px;display:flex;align-items:center;gap:12px;background:var(--bg);z-index:10}
+.logo{font-family:var(--mono);font-size:12px;color:var(--accent2);letter-spacing:.05em;white-space:nowrap;margin-right:auto}
+.tab{font-family:var(--mono);font-size:11px;padding:5px 14px;border-radius:6px;cursor:pointer;color:var(--text3);border:1px solid transparent;transition:all .15s;white-space:nowrap}
+.tab.active{color:var(--accent2);border-color:var(--border2);background:var(--bg3)}
+.status{font-family:var(--mono);font-size:11px;color:var(--text3);display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--text3);flex-shrink:0}
+.dot.on{background:var(--green);box-shadow:0 0 6px var(--green)}
+.dot.err{background:var(--red)}
+
+/* LAYOUT */
+.content{display:grid;grid-template-columns:290px 1fr;overflow:hidden;height:100%}
+.left{border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sect{padding:13px 15px;border-bottom:1px solid var(--border);flex-shrink:0}
+.lbl{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:9px}
+
+/* INPUTS */
+textarea.ev{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:var(--sans);font-size:12px;padding:9px 11px;resize:none;outline:none}
+textarea.ev:focus{border-color:var(--accent)}
+textarea.ev::placeholder{color:var(--text3)}
+input.ki{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:var(--mono);font-size:11px;padding:8px 11px;outline:none;margin-top:0}
+input.ki:focus{border-color:var(--accent)}
+input.ki::placeholder{color:var(--text3)}
+
+/* BUTTONS */
+.btn{width:100%;padding:9px;border:none;border-radius:7px;font-family:var(--mono);font-size:11px;cursor:pointer;transition:all .2s}
+.btn-p{background:var(--accent);color:#fff;margin-top:8px}
+.btn-p:hover{background:var(--accent2)}
+.btn-p:disabled{background:var(--bg3);color:var(--text3);cursor:not-allowed}
+.btn-sm{width:auto;padding:5px 12px;font-size:10px;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:5px;cursor:pointer;transition:all .15s;margin-top:0}
+.btn-sm:hover{border-color:var(--accent2);color:var(--accent2)}
+
+/* PRESETS */
+.presets{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.ptag{font-family:var(--mono);font-size:10px;padding:3px 7px;border-radius:4px;border:1px solid var(--border2);color:var(--text2);cursor:pointer;transition:all .15s}
+.ptag:hover{border-color:var(--accent);color:var(--accent2)}
+
+/* LOG */
+.logarea{flex:1;overflow-y:auto;padding:9px 15px;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:1.9}
+.logarea::-webkit-scrollbar{width:3px}
+.logarea::-webkit-scrollbar-thumb{background:var(--border2)}
+.le{display:flex;gap:6px}
+.lt{flex-shrink:0;opacity:.6}
+.lok{color:var(--green)}.linfo{color:var(--accent2)}.lerr{color:var(--red)}
+
+/* LOADING SCREEN */
+#loading-screen{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;z-index:100}
+.spin{width:20px;height:20px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-txt{font-family:var(--mono);font-size:12px;color:var(--text3)}
+.load-err{font-family:var(--mono);font-size:12px;color:var(--red);max-width:420px;text-align:center;line-height:1.8}
+.load-err code{color:var(--amber)}
+
+/* PANELS */
+.panel,.graph-panel{overflow-y:auto;display:none;position:relative}
+.panel.active{display:block}
+.graph-panel.active{display:block;overflow:hidden}
+.panel::-webkit-scrollbar,.graph-panel::-webkit-scrollbar{width:4px}
+.panel::-webkit-scrollbar-thumb,.graph-panel::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* GRAPH */
+#gsvg{width:100%;height:100%;display:block}
+.node-label{font-family:'IBM Plex Mono',monospace;font-size:9px;fill:#555568;pointer-events:none}
+.node-label.lit{fill:#e8e8f0;font-size:10px}
+.edge{stroke-opacity:.18}.edge.hi{stroke-opacity:.85}.edge.dim{stroke-opacity:.03}
+.tip{position:absolute;background:var(--bg2);border:1px solid var(--border2);border-radius:9px;padding:11px 14px;font-size:12px;pointer-events:none;opacity:0;transition:opacity .12s;max-width:250px;z-index:20}
+.tip-name{font-weight:500;margin-bottom:2px}
+.tip-sec{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:7px}
+.tbadge{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:4px;margin-bottom:5px}
+.tb-n{background:rgba(240,82,82,.15);color:#f87171}
+.tb-p{background:rgba(61,214,140,.15);color:#4ade80}
+.tb-m{background:rgba(245,166,35,.15);color:#fbbf24}
+.tip-body{font-size:11px;color:var(--text2);line-height:1.6}
+.pbar{height:4px;background:var(--bg3);border-radius:2px;overflow:hidden;margin-top:5px}
+.pbar-f{height:100%;border-radius:2px}
+.gleg{position:absolute;bottom:14px;left:14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-family:var(--mono);font-size:10px;color:var(--text2);flex-direction:column;gap:5px;display:none}
+.lr{display:flex;align-items:center;gap:7px}
+.ldot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.lline{width:18px;height:2px;flex-shrink:0;border-radius:1px}
+.gctrl{position:absolute;top:12px;right:12px;gap:5px;flex-wrap:wrap;justify-content:flex-end;display:none}
+.gcb{font-family:var(--mono);font-size:10px;padding:4px 9px;border-radius:5px;border:1px solid var(--border2);background:var(--bg2);color:var(--text2);cursor:pointer;transition:all .15s}
+.gcb:hover,.gcb.active{border-color:var(--accent);color:var(--accent2);background:rgba(91,110,245,.1)}
+
+/* WEIGHTS */
+.pad{padding:20px}
+.wv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px;margin:14px 0}
+.wv-card{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:12px 14px}
+.wv-card.zero{opacity:.35}
+.wv-name{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.wv-val{font-size:22px;font-weight:500;margin-bottom:5px}
+.wv-bt{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden}
+.wv-bf{height:100%;border-radius:2px}
+.wv-why{font-size:11px;color:var(--text2);margin-top:6px;line-height:1.5}
+.vec-box{font-family:var(--mono);font-size:11px;color:var(--text3);padding:8px 12px;background:var(--bg2);border-radius:7px;border:1px solid var(--border);margin-bottom:14px;word-break:break-all}
+
+/* PROB */
+.crow{background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:10px 13px;display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;cursor:pointer;transition:border-color .15s;margin-bottom:6px}
+.crow:hover{border-color:var(--border2)}
+.crow.open{border-color:var(--accent)}
+.crow-name{font-weight:500;font-size:13px}
+.crow-sec{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:1px}
+.bw{display:flex;align-items:center;gap:8px;margin-top:5px}
+.bt{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.bf{height:100%;border-radius:3px;transition:width .5s}
+.bp{font-family:var(--mono);font-size:11px;font-weight:500;min-width:36px;text-align:right}
+.ltag{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;display:inline-block;margin-bottom:3px}
+.lt1{background:rgba(240,82,82,.15);color:#f87171}
+.lt2{background:rgba(245,166,35,.15);color:#fbbf24}
+.lt3{background:rgba(45,212,191,.15);color:#2dd4bf}
+.lt4{background:rgba(139,158,255,.15);color:#8b9eff}
+.npaths{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.detail{display:none;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);grid-column:1/-1}
+.detail.open{display:block}
+.pi{background:var(--bg3);border-radius:6px;padding:7px 10px;font-size:11px;margin-bottom:5px}
+.pchain{font-family:var(--mono);font-size:10px;color:var(--text2);margin-bottom:3px}
+.pa{color:var(--accent)}
+.pscore{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.cbadge{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:3px;margin-left:4px}
+.sort-row{display:flex;gap:6px;margin-bottom:12px;align-items:center;flex-wrap:wrap}
+.sl{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.sbtn{font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s}
+.sbtn.active,.sbtn:hover{border-color:var(--accent);color:var(--accent2)}
+
+/* EDGES */
+.ep-cats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px;align-items:center}
+.ep-cat{font-family:var(--mono);font-size:10px;padding:4px 10px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap}
+.ep-cat.on,.ep-cat:hover{border-color:var(--accent);color:var(--accent2);background:rgba(91,110,245,.1)}
+.ep-search{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:11px;padding:5px 10px;outline:none;width:150px}
+.ep-search:focus{border-color:var(--accent)}
+.ep-search::placeholder{color:var(--text3)}
+.ep-stats{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.ep-stat{background:var(--bg2);border:1px solid var(--border);border-radius:7px;padding:6px 11px;font-family:var(--mono);font-size:10px}
+.ep-stat span{color:var(--accent2);font-size:14px;font-weight:500;display:block}
+.etable{width:100%;border-collapse:collapse;font-size:12px}
+.etable th{font-family:var(--mono);font-size:10px;color:var(--text3);text-align:left;padding:6px 10px;border-bottom:1px solid var(--border2);background:var(--bg);letter-spacing:.05em;position:sticky;top:0}
+.etable td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.etable tr:hover td{background:var(--bg2)}
+.etk{font-family:var(--mono);font-size:10px;background:var(--bg3);padding:2px 6px;border-radius:4px;color:var(--text2);display:inline-block}
+.ecat{font-family:var(--mono);font-size:10px;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.ec-cost_input{background:rgba(240,82,82,.12);color:#f05252}
+.ec-credit{background:rgba(91,110,245,.12);color:#8b9eff}
+.ec-demand{background:rgba(45,212,191,.12);color:#2dd4bf}
+.ec-industry{background:rgba(52,211,153,.12);color:#34d399}
+.ec-investment{background:rgba(251,146,60,.12);color:#fb923c}
+.ec-regulator{background:rgba(167,139,250,.12);color:#a78bfa}
+.ec-sector{background:rgba(136,136,160,.12);color:#8888a0}
+.ec-supply_chain{background:rgba(245,166,35,.12);color:#f5a623}
+.estr.high{color:var(--green);font-family:var(--mono);font-size:10px}
+.estr.medium{color:var(--amber);font-family:var(--mono);font-size:10px}
+.estr.low{color:var(--text3);font-family:var(--mono);font-size:10px}
+.edir{font-family:var(--mono);font-size:11px}
+.edir.positive{color:var(--green)}.edir.negative{color:var(--red)}.edir.mixed{color:var(--amber)}
+/* NODE DETAIL PANEL — slides in from right on node click */
+.node-panel{position:absolute;top:0;right:0;width:300px;height:100%;background:var(--bg2);border-left:1px solid var(--border2);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s ease;z-index:15;overflow:hidden}
+.node-panel.open{transform:translateX(0)}
+.node-panel-close{position:absolute;top:10px;right:10px;width:24px;height:24px;border:1px solid var(--border2);border-radius:5px;background:var(--bg3);color:var(--text2);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.node-panel-close:hover{border-color:var(--accent);color:var(--accent2)}
+.node-panel-body{padding:16px;overflow-y:auto;flex:1}
+.node-panel-body::-webkit-scrollbar{width:3px}
+.node-panel-body::-webkit-scrollbar-thumb{background:var(--border2)}
+.np-name{font-size:15px;font-weight:500;margin-bottom:2px;padding-right:30px}
+.np-sec{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:12px}
+.np-badge{display:inline-block;font-family:var(--mono);font-size:10px;padding:3px 9px;border-radius:4px;margin-bottom:10px}
+.np-badge.neg{background:rgba(240,82,82,.15);color:#f87171}
+.np-badge.pos{background:rgba(61,214,140,.15);color:#4ade80}
+.np-badge.mix{background:rgba(245,166,35,.15);color:#fbbf24}
+.np-badge.neu{background:rgba(136,136,160,.12);color:var(--text2)}
+.np-prob-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.np-prob-track{flex:1;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden}
+.np-prob-fill{height:100%;border-radius:3px}
+.np-prob-val{font-family:var(--mono);font-size:12px;font-weight:500;min-width:36px;text-align:right}
+.np-section{font-family:var(--mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin:12px 0 6px}
+.np-explanation{font-size:12px;color:var(--text2);line-height:1.7;background:var(--bg3);border-radius:7px;padding:10px 12px;border-left:2px solid var(--accent)}
+.np-no-sim{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.np-path{background:var(--bg3);border-radius:6px;padding:8px 10px;margin-bottom:6px}
+.np-path-chain{font-family:var(--mono);font-size:10px;color:var(--text2);margin-bottom:3px;line-height:1.6}
+.np-path-arrow{color:var(--accent)}
+.np-path-meta{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.np-path-score{color:var(--text)}
+.np-conn{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)}
+.np-conn:last-child{border-bottom:none}
+.np-conn-name{font-size:11px;color:var(--text2)}
+.np-conn-cat{font-family:var(--mono);font-size:9px;padding:1px 5px;border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN — shown until CSVs load -->
+<div id="loading-screen">
+  <div class="spin"></div>
+  <div class="load-txt" id="load-msg">Connecting to server…</div>
+</div>
+
+<div class="shell" id="app" style="display:none">
+  <header>
+    <div class="logo">NIFTY50 // impact propagation</div>
+    <div class="tab active" id="tab-g" onclick="switchTab('graph')">Network graph</div>
+    <div class="tab" id="tab-w" onclick="switchTab('weights')">Channel weights</div>
+    <div class="tab" id="tab-p" onclick="switchTab('prob')">Probability scores</div>
+    <div class="tab" id="tab-e" onclick="switchTab('edges')">Edge explorer</div>
+    <div class="status">
+      <div class="dot on" id="sdot"></div>
+      <span id="stxt">loading…</span>
+      <button class="btn-sm" onclick="reloadEdges()" title="Hot-reload CSVs from server">↺ reload</button>
+    </div>
+  </header>
+
+  <div class="content">
+    <!-- LEFT PANEL -->
+    <div class="left">
+      <div class="sect">
+        <div class="lbl">OpenRouter API key</div>
+        <input class="ki" id="apikey" type="password" placeholder="sk-or-v1-… paste your key here">
+        <div style="font-size:10px;color:var(--text3);margin-top:5px">
+          Free at <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--accent2)">openrouter.ai/keys</a>
+          — free tier: 20 req/min, 200 req/day
+        </div>
+        <select id="model-select" style="width:100%;margin-top:7px;background:var(--bg3);border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-family:var(--mono);font-size:10px;padding:5px 8px;outline:none;cursor:pointer">
+          <option value="google/gemini-2.0-flash-001" selected>Gemini 2.0 Flash 001 ✓</option>
+          <option value="openrouter/free">Auto-pick best free model</option>
+          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (free)</option>
+          <option value="meta-llama/llama-4-maverick:free">Llama 4 Maverick (free)</option>
+          <option value="meta-llama/llama-4-scout:free">Llama 4 Scout (free)</option>
+          <option value="deepseek/deepseek-r1:free">DeepSeek R1 (free)</option>
+          <option value="deepseek/deepseek-chat-v3-0324:free">DeepSeek V3 0324 (free)</option>
+          <option value="mistralai/mistral-small-3.1-24b-instruct:free">Mistral Small 3.1 24B (free)</option>
+        </select>
+      </div>
+
+      <div class="sect">
+        <div class="lbl">Simulate Event</div>
+        <textarea class="ev" id="evinput" rows="3"
+          placeholder="e.g. RBI hikes rates 50bps&#10;Crude oil surges 30%&#10;Monsoon fails across India"></textarea>
+        <button class="btn btn-p" id="simbtn" onclick="simulate()">Run simulation →</button>
+        <div class="presets">
+          <div class="ptag" onclick="sp('RBI hikes interest rates by 50bps unexpectedly')">RBI rate hike</div>
+          <div class="ptag" onclick="sp('Crude oil price surges 30% due to Middle East conflict')">Oil surge</div>
+          <div class="ptag" onclick="sp('US recession triggers FII outflows from India')">FII outflows</div>
+          <div class="ptag" onclick="sp('Monsoon fails — below normal rainfall across India')">Monsoon failure</div>
+          <div class="ptag" onclick="sp('Government announces PLI scheme for EV manufacturing')">EV PLI</div>
+          <div class="ptag" onclick="sp('INR depreciates 10% against USD suddenly')">INR fall</div>
+        </div>
+      </div>
+
+      <div class="logarea" id="logarea">
+        <div class="le"><span class="lt">--:--</span><span class="linfo">starting up…</span></div>
+      </div>
+    </div>
+
+    <!-- GRAPH -->
+    <div class="graph-panel active" id="panel-graph">
+      <svg id="gsvg"></svg>
+      <div class="tip" id="tip"></div>
+
+      <!-- Node detail panel — opens on click -->
+      <div class="node-panel" id="node-panel">
+        <div class="node-panel-close" onclick="closeNodePanel()">×</div>
+        <div class="node-panel-body" id="node-panel-body"></div>
+      </div>
+      <div class="gctrl" id="gctrl">
+        <div class="gcb active" id="fa"  onclick="filterE('all')">All</div>
+        <div class="gcb" id="fci" onclick="filterE('cost_input')">Cost input</div>
+        <div class="gcb" id="fcr" onclick="filterE('credit')">Credit</div>
+        <div class="gcb" id="fd"  onclick="filterE('demand')">Demand</div>
+        <div class="gcb" id="fin" onclick="filterE('industry')">Industry</div>
+        <div class="gcb" id="fiv" onclick="filterE('investment')">Investment</div>
+        <div class="gcb" id="frg" onclick="filterE('regulator')">Regulator</div>
+        <div class="gcb" id="fsc" onclick="filterE('sector')">Sector</div>
+        <div class="gcb" id="fsp" onclick="filterE('supply_chain')">Supply chain</div>
+      </div>
+      <div class="gleg" id="gleg">
+        <div style="color:var(--text3);margin-bottom:3px">Edge colour = channel</div>
+        <div class="lr"><div class="lline" style="background:#f05252"></div>Cost input</div>
+        <div class="lr"><div class="lline" style="background:#8b9eff"></div>Credit</div>
+        <div class="lr"><div class="lline" style="background:#2dd4bf"></div>Demand</div>
+        <div class="lr"><div class="lline" style="background:#34d399"></div>Industry</div>
+        <div class="lr"><div class="lline" style="background:#fb923c"></div>Investment</div>
+        <div class="lr"><div class="lline" style="background:#a78bfa"></div>Regulator</div>
+        <div class="lr"><div class="lline" style="background:#8888a0"></div>Sector</div>
+        <div class="lr"><div class="lline" style="background:#f5a623"></div>Supply chain</div>
+        <div style="border-top:1px solid var(--border);margin-top:4px;padding-top:5px;color:var(--text3)">After simulation</div>
+        <div class="lr"><div class="ldot" style="background:#f05252;box-shadow:0 0 7px #f05252"></div>&gt;60% probability</div>
+        <div class="lr"><div class="ldot" style="background:#f5a623;box-shadow:0 0 5px #f5a623"></div>30–60%</div>
+        <div class="lr"><div class="ldot" style="background:#3dd68c;box-shadow:0 0 5px #3dd68c"></div>&lt;30%</div>
+      </div>
+    </div>
+
+    <!-- WEIGHTS -->
+    <div class="panel" id="panel-weights">
+      <div class="pad" id="wv-content">
+        <div style="text-align:center;padding:60px;color:var(--text3);font-family:var(--mono);font-size:12px">
+          Run a simulation to see the channel weight vector.
+        </div>
+      </div>
+    </div>
+
+    <!-- PROB -->
+    <div class="panel" id="panel-prob">
+      <div class="pad" id="prob-content">
+        <div style="text-align:center;padding:60px;color:var(--text3);font-family:var(--mono);font-size:12px">
+          Run a simulation to see probability scores.
+        </div>
+      </div>
+    </div>
+
+    <!-- EDGES -->
+    <div class="panel" id="panel-edges">
+      <div class="pad" id="ep-content"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script>
+// ── CONSTANTS ────────────────────────────────────────────────────────────────
+const API_BASE   = 'http://localhost:3000';
+const CHANNELS   = ['cost_input','credit','demand','industry','investment','regulator','sector','supply_chain'];
+const CNAME      = {cost_input:'Cost input',credit:'Credit',demand:'Demand',industry:'Industry',investment:'Investment',regulator:'Regulator',sector:'Sector',supply_chain:'Supply chain'};
+const EC         = {cost_input:'#f05252',credit:'#8b9eff',demand:'#2dd4bf',industry:'#34d399',investment:'#fb923c',regulator:'#a78bfa',sector:'#8888a0',supply_chain:'#f5a623'};
+const SC         = {Banking:'#5b6ef5',NBFC:'#7b8ef8',Insurance:'#9baeff',Energy:'#f5a623',Power:'#e8952a',Metals:'#d4861e',IT:'#3dd68c',Tech:'#2ec97e',Telecom:'#1fba6e',Auto:'#f05252',Infra:'#e84343',Defence:'#d63434',FMCG:'#2dd4bf',Pharma:'#22c5b0',Chemicals:'#18b6a1',Cement:'#10a791',Consumer:'#a78bfa',Aviation:'#c4a0fc',Diversified:'#9370eb',Financial:'#6366f1',Healthcare:'#22c5b0',Other:'#6b7280'};
+const STR_MULT   = {high:1.0,medium:0.6,low:0.3};
+const LAYER_DECAY= [1.0,0.6,0.35,0.15];
+
+// Known sectors for tickers not in the files
+const KNOWN_SECTOR = {HDFCBANK:'Banking',ICICIBANK:'Banking',SBIN:'Banking',KOTAKBANK:'Banking',AXISBANK:'Banking',INDUSINDBK:'Banking',BAJFINANCE:'NBFC',BAJAJFINSV:'NBFC',SHRIRAMFIN:'NBFC',JIOFIN:'Financial',HDFCLIFE:'Insurance',SBILIFE:'Insurance',RELIANCE:'Energy',ONGC:'Energy',COALINDIA:'Energy',OIL:'Energy',ADANIENT:'Energy',NTPC:'Power',POWERGRID:'Power',TCS:'IT',INFY:'IT',HCLTECH:'IT',WIPRO:'IT',TECHM:'IT',LTIM:'IT',BHARTIARTL:'Telecom',MARUTI:'Auto',TATAMOTORS:'Auto','BAJAJ-AUTO':'Auto','M&M':'Auto',EICHERMOT:'Auto',HEROMOTOCO:'Auto',HINDALCO:'Metals',TATASTEEL:'Metals',JSWSTEEL:'Metals',LT:'Infra',ADANIPORTS:'Infra',BEL:'Defence',HINDUNILVR:'FMCG',ITC:'FMCG',NESTLEIND:'FMCG',TATACONSUM:'FMCG',SUNPHARMA:'Pharma',CIPLA:'Pharma',DRREDDY:'Pharma',DIVISLAB:'Pharma',APOLLOHOSP:'Healthcare',MAXHEALTH:'Healthcare',ASIANPAINT:'Chemicals',GRASIM:'Diversified',ULTRACEMCO:'Cement',TITAN:'Consumer',TRENT:'Consumer',ETERNAL:'Tech',ZOMATO:'Tech',INDIGO:'Aviation',TMPV:'Auto'};
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let EDGES       = [];
+let tickerMeta  = {};
+let probScores  = null;
+let activeF     = 'all';
+let epFilter    = 'all';
+let epSearch    = '';
+let sortBy      = 'prob';
+let svgSel=null, edgeSel=null, nodeSel=null, simObj=null;
+
+// ── STARTUP — fetch edges from server ────────────────────────────────────────
+async function init() {
+  setLoadMsg('Connecting to server at localhost:3000…');
+  try {
+    const res = await fetch(`${API_BASE}/api/edges`);
+    if (!res.ok) throw new Error(`Server returned ${res.status}`);
+    const data = await res.json();
+    ingestEdges(data.edges);
+    hideLoader();
+    lg(`Loaded ${EDGES.length} edges across ${Object.keys(tickerMeta).length} companies from server`,'ok');
+    setSt(`${EDGES.length} edges ready`, true);
+    renderGraph();
+  } catch(err) {
+    showLoaderError(err.message);
+  }
+}
+
+function ingestEdges(edges) {
+  EDGES = edges;
+  tickerMeta = {};
+  for (const e of edges) {
+    if (!tickerMeta[e.from]) tickerMeta[e.from] = {t:e.from, name:e.from, sector:KNOWN_SECTOR[e.from]||'Other'};
+    if (!tickerMeta[e.to])   tickerMeta[e.to]   = {t:e.to,   name:e.to,   sector:KNOWN_SECTOR[e.to]  ||'Other'};
+  }
+}
+
+async function reloadEdges() {
+  setSt('reloading…');
+  try {
+    const res  = await fetch(`${API_BASE}/api/reload`);
+    const data = await res.json();
+    const res2 = await fetch(`${API_BASE}/api/edges`);
+    const d2   = await res2.json();
+    ingestEdges(d2.edges);
+    lg(`Hot-reloaded: ${EDGES.length} edges`,'ok');
+    setSt(`${EDGES.length} edges ready`, true);
+    renderGraph();
+  } catch(err) { lg(`Reload failed: ${err.message}`,'err'); }
+}
+
+// ── LOADER UI ────────────────────────────────────────────────────────────────
+function setLoadMsg(msg) {
+  document.getElementById('load-msg').textContent = msg;
+}
+function hideLoader() {
+  document.getElementById('loading-screen').style.display = 'none';
+  document.getElementById('app').style.display = '';
+}
+function showLoaderError(msg) {
+  const ls = document.getElementById('loading-screen');
+  ls.querySelector('.spin').style.display = 'none';
+  ls.innerHTML = `
+    <div class="load-err">
+      ❌ Could not connect to the Node server.<br><br>
+      <b>Error:</b> ${msg}<br><br>
+      Make sure you have started the server:<br>
+      <code>node server.js</code><br><br>
+      Then refresh this page.
+    </div>`;
+}
+
+// ── UTILS ────────────────────────────────────────────────────────────────────
+function sp(t) { document.getElementById('evinput').value = t; }
+
+function lg(msg, type='info') {
+  const a = document.getElementById('logarea');
+  const n = new Date();
+  const hh = String(n.getHours()).padStart(2,'0'), mm = String(n.getMinutes()).padStart(2,'0');
+  const d = document.createElement('div');
+  d.className = 'le';
+  d.innerHTML = `<span class="lt">${hh}:${mm}</span><span class="l${type}">${msg}</span>`;
+  a.appendChild(d);
+  a.scrollTop = a.scrollHeight;
+}
+
+function setSt(txt, on=false) {
+  document.getElementById('stxt').textContent = txt;
+  document.getElementById('sdot').className = 'dot' + (on ? ' on' : '');
+}
+
+function switchTab(tab) {
+  ['graph','weights','prob','edges'].forEach(t => {
+    const tmap = {graph:'tab-g',weights:'tab-w',prob:'tab-p',edges:'tab-e'};
+    document.getElementById(tmap[t]).className = 'tab' + (tab===t ? ' active' : '');
+    const p = document.getElementById('panel-'+t);
+    if (p) p.className = tab===t ? (t==='graph'?'graph-panel active':'panel active') : (t==='graph'?'graph-panel':'panel');
+  });
+  if (tab === 'edges') renderEdges();
+}
+
+function filterE(type) {
+  activeF = type;
+  const fmap = {all:'fa',cost_input:'fci',credit:'fcr',demand:'fd',industry:'fin',investment:'fiv',regulator:'frg',sector:'fsc',supply_chain:'fsp'};
+  Object.entries(fmap).forEach(([k,id]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('active', k===type);
+  });
+  if (!edgeSel) return;
+  edgeSel.attr('display', d => (type==='all' || d.category===type) ? null : 'none');
+}
+
+// ── OPENROUTER API ───────────────────────────────────────────────────────────
+// Models used for explanation ensemble — all free on OpenRouter
+const EXPLANATION_MODELS = [
+  'google/gemini-2.0-flash-001',
+  'meta-llama/llama-3.3-70b-instruct:free',
+  'deepseek/deepseek-chat-v3-0324:free',
+];
+
+async function callOpenRouter(prompt, modelOverride) {
+  const key   = document.getElementById('apikey').value.trim();
+  const model = modelOverride || document.getElementById('model-select').value;
+  if (!key) throw new Error('No API key -- paste your OpenRouter key in the left panel');
+
+  const safePrompt = prompt.replace(/[^\x09\x0A\x0D\x20-\x7E]/g, ' ');
+
+  const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Authorization': 'Bearer ' + key,
+    },
+    body: JSON.stringify({
+      model,
+      messages    : [{ role:'user', content: safePrompt }],
+      temperature : 0.1,
+      max_tokens  : 1500,
+    })
+  });
+
+  if (!r.ok) {
+    const e = await r.json().catch(()=>({}));
+    throw new Error(e.error?.message || 'OpenRouter HTTP ' + r.status);
+  }
+  const d = await r.json();
+  return d.choices[0].message.content;
+}
+
+// Call multiple models in parallel and return the best result per ticker
+// "best" = most total explanation content (sum of all explanation lengths)
+async function callEnsemble(prompt, batchTickers) {
+  const key = document.getElementById('apikey').value.trim();
+
+  // Fire all models simultaneously
+  const results = await Promise.allSettled(
+    EXPLANATION_MODELS.map(model => callOpenRouter(prompt, model))
+  );
+
+  // Parse each model's response
+  const parsed = results.map((r, i) => {
+    if (r.status === 'rejected') {
+      lg('Model ' + EXPLANATION_MODELS[i] + ' failed: ' + r.reason.message, 'err');
+      return {};
+    }
+    const obj = pJ(r.value);
+    return (obj && typeof obj === 'object') ? obj : {};
+  });
+
+  // For each ticker, pick the explanation with the most content
+  const best = {};
+  batchTickers.forEach(ticker => {
+    const candidates = parsed
+      .map(p => p[ticker] || '')
+      .filter(s => s && s.length > 15)
+      .sort((a, b) => b.length - a.length); // longest first
+    if (candidates.length > 0) best[ticker] = candidates[0];
+  });
+
+  // Log which models contributed
+  const modelScores = EXPLANATION_MODELS.map((m, i) => {
+    const count = parsed[i] ? Object.keys(parsed[i]).filter(t => batchTickers.includes(t) && parsed[i][t]?.length > 15).length : 0;
+    return m.split('/')[1].split(':')[0] + '=' + count;
+  });
+  lg('Ensemble pick: [' + modelScores.join(', ') + '] -> ' + Object.keys(best).length + ' explanations', 'ok');
+
+  return best;
+}
+
+function pJ(raw) {
+  try { return JSON.parse(raw.replace(/```json|```/g,'').trim()); }
+  catch(e) { return null; }
+}
+
+// ── SIMULATE ──────────────────────────────────────────────────────────────────
+async function simulate() {
+  const event = document.getElementById('evinput').value.trim();
+  if (!event) { lg('Enter an event first','err'); return; }
+  if (!document.getElementById('apikey').value.trim()) { lg('Enter OpenRouter API key first','err'); return; }
+
+  const btn = document.getElementById('simbtn');
+  btn.disabled = true; btn.textContent = 'Simulating…';
+  setSt('simulating…', true);
+  lg(`Event: "${event}"`,'info');
+  probScores = null;
+
+  // Reset graph node visuals
+  if (nodeSel) {
+    nodeSel.select('circle')
+      .attr('fill', d => SC[d.sector]||'#8888a0')
+      .attr('r', d => {
+        const deg = EDGES.filter(e=>e.from===d.id||e.to===d.id).length;
+        return Math.max(7, Math.min(15, 6 + deg*0.55));
+      })
+      .attr('stroke','#0a0a0f').attr('stroke-width',1.5).style('filter',null);
+    nodeSel.select('text').classed('lit', false);
+  }
+
+  // STEP 1 — weight vector
+  switchTab('weights');
+  document.getElementById('wv-content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:10px;color:var(--text3);font-family:var(--mono);font-size:12px;padding:20px">
+      <div class="spin"></div>Asking Gemini to score each channel…
+    </div>`;
+
+  const tickers = Object.keys(tickerMeta).join(', ');
+  const wPrompt = `You are a financial analyst specializing in Indian equity markets.
+
+Event: "${event}"
+
+Score each channel 0.0-1.0 for how strongly this event propagates through it:
+- cost_input: raises direct input costs (fuel, raw materials, energy)?
+- credit: tightens credit, raises borrowing costs, affects lending?
+- demand: suppresses or boosts consumer/business demand?
+- industry: reshapes competitive dynamics within industries?
+- investment: changes capex plans or FII/FDI flows?
+- regulator: triggers regulatory, policy, or government response?
+- sector: causes broad sector sentiment contagion?
+- supply_chain: disrupts physical supply chains or logistics?
+
+Also identify 3-8 companies from this list that are MOST DIRECTLY hit (layer 1):
+${tickers}
+
+For direct_shock: the "direction" field is REQUIRED for every company — "positive" if the event benefits them, "negative" if it hurts them. Never omit it. Never use a flat number.
+
+Return ONLY valid JSON, no markdown:
+{"weights":{"cost_input":0.0,"credit":0.0,"demand":0.0,"industry":0.0,"investment":0.0,"regulator":0.0,"sector":0.0,"supply_chain":0.0},"reasoning":{"cost_input":"one line","credit":"one line","demand":"one line","industry":"one line","investment":"one line","regulator":"one line","sector":"one line","supply_chain":"one line"},"direct_shock":{"TICKER1":{"score":0.9,"direction":"positive"},"TICKER2":{"score":0.8,"direction":"negative"}}}`;
+
+  let W = null, directShock = {};
+  try {
+    const raw = await callOpenRouter(wPrompt);
+    const wr  = pJ(raw);
+    if (wr && wr.weights) {
+      W = wr.weights;
+      directShock = wr.direct_shock || {};
+      lg(`Weights: ${CHANNELS.map(c=>`${c}=${(W[c]||0).toFixed(2)}`).join(' | ')}`,'ok');
+      renderWeights(event, W, wr.reasoning||{});
+    }
+  } catch(err) { lg(`Weight vector error: ${err.message}`,'err'); }
+  if (!W) { W = Object.fromEntries(CHANNELS.map(c=>[c,0.3])); }
+
+  // STEP 2 — propagate
+  lg('Propagating through graph…','info');
+  const scores  = {};
+  const validT  = new Set(Object.keys(tickerMeta));
+
+  // Seed direct shock (layer 1)
+  // directShock can be {"TICKER": 0.9} or {"TICKER": {"score":0.9, "direction":"positive"}}
+  // If direction is missing we ask the LLM to infer it from the event + company
+  const shockEntries = Object.entries(directShock);
+
+  // For any ticker missing a direction, batch-ask the LLM to fill it in
+  const missingDir = shockEntries.filter(([, val]) => typeof val !== 'object' || !val.direction);
+  if (missingDir.length > 0) {
+    try {
+      const inferPrompt =
+        'EVENT: "' + event + '"\n' +
+        'For each company below, reply with "positive" if the event benefits them or "negative" if it hurts them.\n' +
+        'Companies: ' + missingDir.map(([t]) => t).join(', ') + '\n' +
+        'Return ONLY JSON: {"TICKER":"positive"} or {"TICKER":"negative"}';
+      const raw  = await callOpenRouter(inferPrompt);
+      const dirs = pJ(raw);
+      if (dirs) {
+        missingDir.forEach(([t]) => {
+          const inferred = dirs[t];
+          if (inferred === 'positive' || inferred === 'negative') {
+            directShock[t] = { score: typeof directShock[t] === 'object' ? directShock[t].score : directShock[t], direction: inferred };
+          }
+        });
+      }
+    } catch(e) { /* silently fall through to default */ }
+  }
+
+  Object.entries(directShock).forEach(([t, val]) => {
+    const score     = typeof val === 'object' ? (val.score || 0.85)           : val;
+    const direction = typeof val === 'object' ? (val.direction || 'positive') : 'positive'; // default positive, not negative
+    if (validT.has(t)) {
+      scores[t] = {
+        prob: Math.min(score, 0.97),
+        paths: [{
+          chain    : [`EVENT->${t}`],
+          score,
+          channel  : 'direct',
+          layer    : 1,
+          direction,
+          mechanism: `Direct impact: ${event} hits ${t} (${tickerMeta[t]?.sector||''}) ${direction === 'positive' ? 'positively' : direction === 'negative' ? 'negatively' : 'with mixed effect'} as a primary affected company`,
+          srcDir   : direction,
+          edgeDir  : direction,
+        }],
+        layer: 1,
+        direction,
+      };
+    }
+  });
+
+  // Helper: compute resulting direction given source direction + edge direction
+  // e.g. source=positive, edge=positive → target=positive
+  //      source=positive, edge=negative → target=negative (competition/inverse)
+  //      source=negative, edge=positive → target=negative
+  //      source=negative, edge=negative → target=positive (inverse of inverse)
+  function computeDirection(srcDir, edgeDir) {
+    if (!srcDir || srcDir === 'mixed' || edgeDir === 'mixed') return 'mixed';
+    if (edgeDir === 'positive') return srcDir;
+    if (edgeDir === 'negative') return srcDir === 'positive' ? 'negative' : 'positive';
+    return 'mixed';
+  }
+
+  // BFS layers 2–4
+  const visited = new Set(Object.keys(scores));
+  let frontier  = [...visited];
+
+  for (let layer = 2; layer <= 4; layer++) {
+    const decay = LAYER_DECAY[layer-1];
+    const next  = [];
+    frontier.forEach(src => {
+      const srcProb = scores[src]?.prob || 0;
+      EDGES
+        .filter(e => e.from === src && !visited.has(e.to))
+        .forEach(edge => {
+          const cw        = W[edge.category] || 0.05;
+          const sm        = STR_MULT[edge.strength] || 0.3;
+          const ew        = edge.weight != null ? edge.weight : 1.0;
+          const pathScore = srcProb * cw * sm * ew * decay;
+          if (pathScore < 0.02) return;
+
+          const tgt = edge.to;
+          if (!scores[tgt]) { scores[tgt] = {prob:0, paths:[], layer}; next.push(tgt); }
+
+          // Compute direction: what does this event do to the target?
+          const srcDir    = scores[src]?.direction || 'mixed';
+          const resultDir = computeDirection(srcDir, edge.direction);
+
+          scores[tgt].paths.push({
+            chain    : [src, tgt],
+            score    : pathScore,
+            channel  : edge.category,
+            mechanism: edge.mechanism,
+            layer,
+            strength : edge.strength,
+            direction: resultDir,      // direction of impact on this target
+            srcDir,                    // source's own direction (for LLM context)
+            edgeDir  : edge.direction, // raw edge direction
+          });
+
+          // Node-level direction = direction of strongest path
+          if (!scores[tgt].direction || pathScore > (scores[tgt]._topScore||0)) {
+            scores[tgt].direction  = resultDir;
+            scores[tgt]._topScore  = pathScore;
+          }
+          // P(A or B) = 1 - (1-A)(1-B)
+          scores[tgt].prob = Math.min(1 - (1 - scores[tgt].prob) * (1 - pathScore), 0.97);
+        });
+    });
+    next.forEach(t => visited.add(t));
+    frontier = next;
+    lg(`Layer ${layer}: ${Object.values(scores).filter(s=>s.layer===layer).length} companies reached`,'ok');
+  }
+
+  probScores = scores;
+
+  // STEP 3 — pass full raw path data to LLM, let it reason from real facts
+  lg('Step 3: generating explanations from path data...', 'info');
+  switchTab('prob');
+  document.getElementById('prob-content').innerHTML = `
+    <div style="font-size:16px;font-weight:500;margin-bottom:3px">${event}</div>
+    <div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:16px">${Object.keys(scores).length} companies — writing explanations...</div>
+    <div style="display:flex;align-items:center;gap:10px;color:var(--text3);font-family:var(--mono);font-size:12px">
+      <div class="spin"></div>Explaining each company using path data...
+    </div>`;
+
+  try {
+    const allEntries = Object.entries(scores);
+    const BATCH = 8;
+
+    for (let bi = 0; bi < allEntries.length; bi += BATCH) {
+      const batch    = allEntries.slice(bi, bi + BATCH);
+      const batchNum = Math.floor(bi/BATCH) + 1;
+      const total    = Math.ceil(allEntries.length/BATCH);
+      lg('Explanation batch ' + batchNum + '/' + total + ' (' + batch.length + ' companies, ' + EXPLANATION_MODELS.length + ' models)...', 'info');
+
+      // Pass ALL raw path data — mechanism text, channel, source company, directions
+      const batchContext = batch.map(([ticker, sc]) => {
+        const comp = tickerMeta[ticker] || {};
+        const pathData = sc.paths
+          .sort((a,b) => b.score - a.score)
+          .slice(0, 4)
+          .map((p, i) => {
+            const src     = p.chain[0];
+            const mech    = p.mechanism || '(no mechanism)';
+            const channel = p.channel;
+            const srcDir  = p.srcDir    || 'unknown';
+            const resDir  = p.direction || 'unknown';
+            const score   = Math.round(p.score * 100);
+            if (sc.layer === 1) {
+              return '  path_' + (i+1) + ': directly_affected | mechanism: ' + mech + ' | this_company_impact: ' + resDir + ' | score: ' + score + '%';
+            } else {
+              return '  path_' + (i+1) + ': ' + src + '_is_' + srcDir + ' -> via_' + channel + '("' + mech + '") -> ' + ticker + '_is_' + resDir + ' | score: ' + score + '%';
+            }
+          }).join('');
+
+        return 'COMPANY: ' + ticker + ' | sector: ' + (comp.sector||'?') + ' | layer: ' + sc.layer + ' | overall_impact: ' + (sc.direction||'unknown') + '' + pathData;
+      }).join('');
+
+      const prompt = 
+        'EVENT: "' + event + '"' +
+        'Below is structured path data showing exactly how each company is connected to this event. ' +
+        'Each path shows: the source company and its impact, the mechanism/relationship, and the resulting impact on the target company.' +
+        batchContext + '' +
+        'For each company write 2 sentences explaining why it is affected by the event. ' +
+        'Base your explanation STRICTLY on the path data above — the mechanism text, the source company impact, and the resulting impact direction. ' +
+        'The overall_impact field is ground truth — do not contradict it. ' +
+        'If overall_impact is positive the company benefits. If negative it is hurt. ' +
+        'Do not use any outside knowledge beyond what is in the path data.' +
+        'Return ONLY valid JSON: {"TICKER":"explanation"} for every company above.';
+
+      const batchTickers = batch.map(([t]) => t);
+      const exps = await callEnsemble(prompt, batchTickers);
+      let got = 0;
+      Object.entries(exps).forEach(([ticker, explanation]) => {
+        if (scores[ticker] && explanation && explanation.length > 20) {
+          scores[ticker].explanation = String(explanation);
+          got++;
+        }
+      });
+      lg('Batch ' + batchNum + ': ' + got + '/' + batch.length + ' explanations', 'ok');
+    }
+
+    const covered = Object.values(scores).filter(s => s.explanation).length;
+    lg('Explanations complete: ' + covered + '/' + allEntries.length + ' companies', 'ok');
+
+  } catch(err) {
+    lg('Explanation pass failed: ' + err.message, 'err');
+  }
+
+  // Glow nodes
+  if (nodeSel) {
+    nodeSel.each(function(d) {
+      const sc = scores[d.id];
+      if (!sc) return;
+      const p   = sc.prob;
+      const col = p > 0.6 ? '#f05252' : p > 0.3 ? '#f5a623' : '#3dd68c';
+      const glow= p > 0.6 ? '0 0 12px #f05252' : p > 0.3 ? '0 0 8px #f5a623' : '0 0 6px #3dd68c';
+      d3.select(this).select('circle')
+        .attr('fill', col).attr('r', Math.max(10, Math.min(20, 10+p*12)))
+        .attr('stroke','#fff').attr('stroke-width',1.5)
+        .style('filter', `drop-shadow(${glow})`);
+      d3.select(this).select('text').classed('lit', true);
+    });
+  }
+
+  renderProbPanel(event, scores);
+  btn.disabled = false; btn.textContent = 'Run simulation →';
+  setSt(`${EDGES.length} edges ready`, true);
+  lg(`Done — ${Object.keys(scores).length} companies affected. See Probability Scores tab.`,'ok');
+}
+
+// ── RENDER WEIGHTS ────────────────────────────────────────────────────────────
+function renderWeights(event, W, reasoning) {
+  const maxW = Math.max(...Object.values(W), 0.01);
+  const cards = CHANNELS.map(ch => {
+    const v = W[ch] || 0, pct = Math.round(v*100);
+    const col = v > 0.7 ? '#f05252' : v > 0.4 ? '#f5a623' : v > 0.1 ? '#5b6ef5' : '#454558';
+    return `<div class="wv-card${v<0.05?' zero':''}">
+      <div class="wv-name">${CNAME[ch]}</div>
+      <div class="wv-val" style="color:${col}">${pct}%</div>
+      <div class="wv-bt"><div class="wv-bf" style="width:${Math.round(v/maxW*100)}%;background:${col}"></div></div>
+      <div class="wv-why">${reasoning[ch]||''}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('wv-content').innerHTML = `
+    <div style="font-size:16px;font-weight:500;margin-bottom:4px">${event}</div>
+    <div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:12px">channel weight vector</div>
+    <div class="vec-box">[${CHANNELS.map(c=>(W[c]||0).toFixed(2)).join(', ')}]</div>
+    <div class="wv-grid">${cards}</div>`;
+}
+
+// ── RENDER PROB PANEL ────────────────────────────────────────────────────────
+function renderProbPanel(event, scores) {
+  const sorted = Object.entries(scores).sort((a,b)=>b[1].prob-a[1].prob);
+  document.getElementById('prob-content').innerHTML = `
+    <div style="font-size:16px;font-weight:500;margin-bottom:3px">${event}</div>
+    <div style="font-size:11px;color:var(--text2);font-family:var(--mono);margin-bottom:12px">${sorted.length} companies affected</div>
+    <div class="sort-row">
+      <span class="sl">sort:</span>
+      <button class="sbtn active" id="sb-prob"  onclick="setSortBy('prob')">Probability</button>
+      <button class="sbtn"        id="sb-layer" onclick="setSortBy('layer')">Layer first</button>
+    </div>
+    <div id="crow-list"></div>`;
+  renderCrows(sorted);
+}
+
+function setSortBy(by) {
+  sortBy = by;
+  if (!probScores) return;
+  document.getElementById('sb-prob') .classList.toggle('active', by==='prob');
+  document.getElementById('sb-layer').classList.toggle('active', by==='layer');
+  const sorted = Object.entries(probScores).sort((a,b) =>
+    by==='prob' ? b[1].prob - a[1].prob : a[1].layer - b[1].layer || b[1].prob - a[1].prob);
+  renderCrows(sorted);
+}
+
+function renderCrows(sorted) {
+  const list = document.getElementById('crow-list');
+  if (!list) return;
+  list.innerHTML = sorted.map(([ticker, sc]) => {
+    const comp   = tickerMeta[ticker] || {name:ticker, sector:''};
+    const p      = sc.prob, pct = Math.round(p*100);
+    const col    = p>0.6 ? '#f05252' : p>0.3 ? '#f5a623' : '#3dd68c';
+    const ltag   = sc.layer===1?'lt1':sc.layer===2?'lt2':sc.layer===3?'lt3':'lt4';
+    const lnames = {1:'Direct',2:'Layer 2',3:'Layer 3',4:'Hidden'};
+    const paths  = sc.paths.sort((a,b)=>b.score-a.score).slice(0,4);
+
+    // LLM explanation — if missing, show a placeholder (never show raw mechanism text)
+    const explanation = sc.explanation || null;
+
+    // Raw paths shown in expandable detail section — full data, not truncated
+    const pathsHtml = paths.map(path => {
+      const ps     = Math.round(path.score*100);
+      const resDir = path.direction === 'positive' ? '↑ benefits' : path.direction === 'negative' ? '↓ hurt' : '~ mixed';
+      const srcStr = path.srcDir && path.chain.length > 1
+        ? `<span style="color:var(--text3)"> (${path.chain[0]} is ${path.srcDir})</span>` : '';
+      return `<div class="pi">
+        <div class="pchain">${path.chain.map((t,i)=>i===0?`<span style="color:var(--text2)">${t}</span>`:`<span class="pa">→</span><span>${t}</span>`).join('')}<span class="cbadge ecat ec-${path.channel}">${CNAME[path.channel]||path.channel}</span>${srcStr}</div>
+        <div class="pscore" style="margin-top:3px">${path.mechanism || ''}</div>
+        <div class="pscore" style="margin-top:2px">score: <span style="color:var(--text)">${ps}%</span> · impact: <span style="color:${path.direction==='positive'?'var(--green)':path.direction==='negative'?'var(--red)':'var(--amber)'}">${resDir}</span></div>
+      </div>`;
+    }).join('');
+
+    return `<div class="crow" id="crow-${ticker}" onclick="toggleCrow('${ticker}')">
+      <div>
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:5px">
+          <span class="crow-name">${comp.name}</span>
+          <span class="crow-sec">${comp.sector}</span>
+        </div>
+        ${explanation
+          ? `<div style="font-size:11px;color:var(--text2);line-height:1.6;margin-bottom:6px">${explanation}</div>`
+          : `<div style="font-size:11px;color:var(--text3);font-style:italic;margin-bottom:6px;font-family:var(--mono)">explanation not generated — click to see paths</div>`
+        }
+        <div class="bw">
+          <div class="bt"><div class="bf" style="width:${pct}%;background:${col}"></div></div>
+          <span class="bp" style="color:${col}">${pct}%</span>
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div class="ltag ${ltag}">${lnames[sc.layer]||'L'+sc.layer}</div>
+        <div class="npaths">${sc.paths.length} path${sc.paths.length!==1?'s':''}</div>
+      </div>
+      <div class="detail" id="det-${ticker}">
+        <div style="font-size:10px;color:var(--text3);font-family:var(--mono);margin-bottom:6px">propagation paths:</div>
+        ${pathsHtml}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCrow(t) {
+  const el  = document.getElementById(`crow-${t}`);
+  const det = document.getElementById(`det-${t}`);
+  if (!el || !det) return;
+  const open = det.classList.contains('open');
+  det.classList.toggle('open', !open);
+  el.classList.toggle('open', !open);
+}
+
+// ── NODE DETAIL PANEL ─────────────────────────────────────────────────────────
+function closeNodePanel() {
+  document.getElementById('node-panel').classList.remove('open');
+}
+
+function openNodePanel(d, links, degMap) {
+  const ps      = probScores && probScores[d.id];
+  const body    = document.getElementById('node-panel-body');
+  const lnames  = {1:'Direct hit',2:'Layer 2',3:'Layer 3',4:'Hidden / indirect'};
+  const catCls  = {cost_input:'ec-cost_input',credit:'ec-credit',demand:'ec-demand',industry:'ec-industry',investment:'ec-investment',regulator:'ec-regulator',sector:'ec-sector',supply_chain:'ec-supply_chain'};
+
+  // Header
+  let html = `
+    <div class="np-name">${d.id}</div>
+    <div class="np-sec">${d.sector}</div>`;
+
+  if (ps) {
+    const p   = Math.round(ps.prob*100);
+    const col = p>60?'#f05252':p>30?'#f5a623':'#3dd68c';
+    const dir = ps.direction || 'mixed';
+    const bc  = dir==='positive'?'pos':dir==='negative'?'neg':'mix';
+    const dirLabel = dir==='positive'?'↑ Positive impact':dir==='negative'?'↓ Negative impact':'~ Mixed impact';
+
+    html += `
+      <span class="np-badge ${bc}">${dirLabel}</span>
+      <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:6px">${lnames[ps.layer]||'Layer '+ps.layer} · ${ps.paths.length} path${ps.paths.length!==1?'s':''}</div>
+      <div class="np-prob-row">
+        <div class="np-prob-track"><div class="np-prob-fill" style="width:${p}%;background:${col}"></div></div>
+        <span class="np-prob-val" style="color:${col}">${p}%</span>
+      </div>`;
+
+    // LLM explanation
+    if (ps.explanation) {
+      html += `
+        <div class="np-section">Why affected</div>
+        <div class="np-explanation">${ps.explanation}</div>`;
+    }
+
+    // Top propagation paths — full data shown
+    const topPaths = ps.paths.sort((a,b)=>b.score-a.score).slice(0,4);
+    html += `<div class="np-section">Propagation paths (raw data sent to LLM)</div>`;
+    html += topPaths.map(path => {
+      const ps2    = Math.round(path.score*100);
+      const catCl  = catCls[path.channel] || '';
+      const resDir = path.direction === 'positive' ? '↑ benefits' : path.direction === 'negative' ? '↓ hurt' : '~ mixed';
+      const dirCol = path.direction === 'positive' ? 'var(--green)' : path.direction === 'negative' ? 'var(--red)' : 'var(--amber)';
+      const chainHtml = path.chain
+        .map((t,i) => i===0
+          ? `<span style="color:var(--text3)">${t}</span>`
+          : `<span class="np-path-arrow"> → </span><span style="color:var(--text)">${t}</span>`)
+        .join('');
+      const srcNote = path.srcDir && path.chain.length > 1
+        ? `<div class="np-path-meta" style="margin-top:2px">${path.chain[0]} is ${path.srcDir} from event</div>` : '';
+      return `<div class="np-path">
+        <div class="np-path-chain">${chainHtml} <span class="np-conn-cat ecat ${catCl}">${CNAME[path.channel]||path.channel}</span></div>
+        <div class="np-path-meta" style="margin-top:3px">${path.mechanism || '(no mechanism text)'}</div>
+        ${srcNote}
+        <div class="np-path-meta" style="margin-top:2px">score: <span class="np-path-score">${ps2}%</span> · impact on this company: <span style="color:${dirCol}">${resDir}</span></div>
+      </div>`;
+    }).join('');
+
+  } else {
+    html += `<div class="np-no-sim" style="margin-bottom:14px">No simulation run yet.<br>Run a simulation to see impact scores.</div>`;
+  }
+
+  // Direct connections
+  const connected = links
+    .filter(l => l.source.id===d.id || l.target.id===d.id)
+    .map(l => ({
+      ticker : l.source.id===d.id ? l.target.id : l.source.id,
+      cat    : l.category,
+      dir    : l.direction,
+      mech   : l.mechanism,
+    }));
+
+  if (connected.length > 0) {
+    html += `<div class="np-section">${connected.length} direct connections</div>`;
+    html += connected.slice(0,8).map(c => {
+      const catCl = catCls[c.cat] || '';
+      const sym   = {positive:'↑',negative:'↓',mixed:'~'}[c.dir] || '~';
+      return `<div class="np-conn">
+        <span class="np-conn-name">${c.ticker}</span>
+        <span class="np-conn-cat ecat ${catCl}">${sym} ${CNAME[c.cat]||c.cat}</span>
+      </div>`;
+    }).join('');
+    if (connected.length > 8) {
+      html += `<div style="font-family:var(--mono);font-size:10px;color:var(--text3);padding:5px 0">+${connected.length-8} more</div>`;
+    }
+  }
+
+  body.innerHTML = html;
+  document.getElementById('node-panel').classList.add('open');
+}
+
+// ── RENDER GRAPH ──────────────────────────────────────────────────────────────
+function renderGraph() {
+  const panel = document.getElementById('panel-graph');
+  const W = panel.clientWidth, H = panel.clientHeight;
+  d3.select('#gsvg').selectAll('*').remove();
+  const svg = d3.select('#gsvg').attr('width', W).attr('height', H);
+  svgSel = svg;
+
+  const nodes = Object.values(tickerMeta).map((n, i) => {
+    const a = (i / Object.keys(tickerMeta).length) * 2 * Math.PI;
+    return {...n, id:n.t, x:W/2+Math.cos(a)*180, y:H/2+Math.sin(a)*180};
+  });
+  const nById = Object.fromEntries(nodes.map(n => [n.id, n]));
+
+  // Deduplicate edges for display (keep strongest per pair)
+  const eMap = new Map();
+  EDGES.forEach(e => {
+    const k = [e.from,e.to].sort().join('|');
+    if (!eMap.has(k) || e.strength==='high') eMap.set(k, e);
+  });
+  const links = [...eMap.values()]
+    .map(e => {
+      const s = nById[e.from], t = nById[e.to];
+      return s && t ? {...e, source:s, target:t} : null;
+    }).filter(Boolean);
+
+  const g = svg.append('g');
+  svg.call(d3.zoom().scaleExtent([0.2,4]).on('zoom', ev => g.attr('transform', ev.transform)));
+  svg.on('click', () => closeNodePanel());
+
+  edgeSel = g.append('g').selectAll('line').data(links).enter().append('line')
+    .attr('class','edge')
+    .attr('stroke', d => EC[d.category] || '#555568')
+    .attr('stroke-width', d => d.strength==='high'?2:d.strength==='medium'?1.2:0.6);
+
+  const degMap = {};
+  links.forEach(l => {
+    degMap[l.source.id] = (degMap[l.source.id]||0)+1;
+    degMap[l.target.id] = (degMap[l.target.id]||0)+1;
+  });
+
+  nodeSel = g.append('g').selectAll('g').data(nodes).enter().append('g')
+    .style('cursor','pointer')
+    .call(d3.drag()
+      .on('start',(ev,d)=>{ if(!ev.active) simObj.alphaTarget(.3).restart(); d.fx=d.x; d.fy=d.y; })
+      .on('drag', (ev,d)=>{ d.fx=ev.x; d.fy=ev.y; })
+      .on('end',  (ev,d)=>{ if(!ev.active) simObj.alphaTarget(0); d.fx=null; d.fy=null; }));
+
+  nodeSel.append('circle')
+    .attr('r', d => Math.max(7, Math.min(15, 6+(degMap[d.id]||0)*0.55)))
+    .attr('fill', d => SC[d.sector]||'#8888a0')
+    .attr('stroke','#0a0a0f').attr('stroke-width',1.5);
+  nodeSel.append('text').attr('class','node-label').attr('text-anchor','middle').attr('dy','2.3em').text(d=>d.id);
+
+  // Hover — highlight edges only, show mini tooltip
+  const tip = document.getElementById('tip');
+  nodeSel
+    .on('mouseover', (ev, d) => {
+      edgeSel.classed('hi',  l => l.source.id===d.id || l.target.id===d.id);
+      edgeSel.classed('dim', l => l.source.id!==d.id && l.target.id!==d.id);
+      nodeSel.select('text').classed('lit', n => n.id===d.id || links.some(l=>(l.source.id===d.id&&l.target.id===n.id)||(l.target.id===d.id&&l.source.id===n.id)));
+      tip.innerHTML = `<div class="tip-name">${d.id}</div><div class="tip-sec">${d.sector} · click for details</div>`;
+      tip.style.opacity = '1';
+      const rect = panel.getBoundingClientRect();
+      let tx = ev.clientX-rect.left+16, ty = ev.clientY-rect.top-10;
+      if (tx+260>W) tx = ev.clientX-rect.left-265;
+      tip.style.left = tx+'px'; tip.style.top = ty+'px';
+    })
+    .on('mousemove', ev => {
+      const rect = panel.getBoundingClientRect();
+      let tx = ev.clientX-rect.left+16, ty = ev.clientY-rect.top-10;
+      if (tx+260>W) tx = ev.clientX-rect.left-265;
+      tip.style.left = tx+'px'; tip.style.top = ty+'px';
+    })
+    .on('mouseout', () => {
+      tip.style.opacity = '0';
+      edgeSel.classed('hi',false).classed('dim',false);
+      nodeSel.select('text').classed('lit',false);
+    })
+    .on('click', (ev, d) => {
+      ev.stopPropagation();
+      openNodePanel(d, links, degMap);
+    });
+
+  simObj = d3.forceSimulation(nodes)
+    .force('link',    d3.forceLink(links).id(d=>d.id).distance(d=>d.strength==='high'?70:d.strength==='medium'?100:130).strength(0.35))
+    .force('charge',  d3.forceManyBody().strength(-200))
+    .force('center',  d3.forceCenter(W/2, H/2))
+    .force('collide', d3.forceCollide(20))
+    .on('tick', () => {
+      edgeSel.attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
+      nodeSel.attr('transform', d=>`translate(${d.x},${d.y})`);
+    });
+
+  // Show controls
+  document.getElementById('gctrl').style.display = 'flex';
+  document.getElementById('gleg').style.display  = 'flex';
+}
+
+// ── EDGE EXPLORER ─────────────────────────────────────────────────────────────
+function renderEdges() {
+  const ep = document.getElementById('ep-content');
+  const counts = {};
+  EDGES.forEach(e => { counts[e.category] = (counts[e.category]||0)+1; });
+
+  let filtered = EDGES.filter(e => {
+    if (epFilter!=='all' && e.category!==epFilter) return false;
+    if (epSearch) {
+      const q = epSearch.toLowerCase();
+      return e.from.toLowerCase().includes(q) || e.to.toLowerCase().includes(q) || (e.mechanism||'').toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  const catBtns = ['all',...CHANNELS].map(c => {
+    const cnt   = c==='all' ? EDGES.length : (counts[c]||0);
+    const label = c==='all' ? 'All' : (CNAME[c]||c);
+    return `<div class="ep-cat${epFilter===c?' on':''}" onclick="epFilter='${c}';renderEdges()">${label} <span style="opacity:.5">${cnt}</span></div>`;
+  }).join('');
+
+  ep.innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <h2 style="font-size:17px;font-weight:500;margin-right:auto">Edge explorer</h2>
+      <button class="btn-sm" onclick="exportCSV()">Export CSV</button>
+    </div>
+    <div class="ep-cats">
+      ${catBtns}
+      <input class="ep-search" placeholder="Search ticker or keyword…" value="${epSearch}"
+        oninput="epSearch=this.value;renderEdges()" style="margin-left:auto">
+    </div>
+    <div class="ep-stats">
+      <div class="ep-stat"><span>${EDGES.length}</span>total</div>
+      ${CHANNELS.map(c=>`<div class="ep-stat"><span>${counts[c]||0}</span>${CNAME[c]||c}</div>`).join('')}
+      <div class="ep-stat"><span>${filtered.length}</span>showing</div>
+    </div>
+    <table class="etable">
+      <thead><tr><th>From</th><th>To</th><th>Mechanism</th><th>Category</th><th>Strength</th><th>Direction</th></tr></thead>
+      <tbody>
+        ${filtered.length===0
+          ? `<tr><td colspan="6" style="text-align:center;padding:30px;color:var(--text3);font-family:var(--mono)">No edges match.</td></tr>`
+          : filtered.map(e => {
+              const dir = e.direction||'mixed';
+              const sym = {positive:'↑',negative:'↓',mixed:'~'}[dir]||'~';
+              return `<tr>
+                <td><span class="etk">${e.from}</span></td>
+                <td><span class="etk">${e.to}</span></td>
+                <td style="color:var(--text2);font-size:11px;max-width:200px">${e.mechanism||''}</td>
+                <td><span class="ecat ec-${e.category}">${CNAME[e.category]||e.category}</span></td>
+                <td><span class="estr ${e.strength||'low'}">${e.strength||'—'}</span></td>
+                <td><span class="edir ${dir}">${sym} ${e.direction||'—'}</span></td>
+              </tr>`;
+            }).join('')}
+      </tbody>
+    </table>`;
+}
+
+function exportCSV() {
+  const rows = [['From','To','Mechanism','Category','Strength','Direction']];
+  EDGES.forEach(e => rows.push([e.from, e.to, `"${(e.mechanism||'').replace(/"/g,'""')}"`, e.category||'', e.strength||'', e.direction||'']));
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(rows.map(r=>r.join(',')).join('\n'));
+  a.download = 'nifty50_edges.csv';
+  a.click();
+}
+
+// ── BOOT ──────────────────────────────────────────────────────────────────────
+window.addEventListener('load', init);
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+From,To,Mechanism,Category,Strength,Direction
+HDFCBANK,ICICIBANK,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+HDFCBANK,KOTAKBANK,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+HDFCBANK,SBIN,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+ICICIBANK,KOTAKBANK,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+ICICIBANK,SBIN,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+KOTAKBANK,SBIN,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+AXISBANK,HDFCBANK,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+AXISBANK,ICICIBANK,Same banking sector regulatory exposure,Regulatory_Sector,high,positive
+TCS,INFY,Same IT services regulatory and global policy exposure,Regulatory_Sector,high,positive
+TCS,HCLTECH,Same IT services regulatory and global policy exposure,Regulatory_Sector,high,positive
+TCS,WIPRO,Same IT services regulatory and global policy exposure,Regulatory_Sector,high,positive
+INFY,HCLTECH,Same IT services regulatory and global policy exposure,Regulatory_Sector,high,positive
+INFY,WIPRO,Same IT services regulatory and global policy exposure,Regulatory_Sector,high,positive
+HCLTECH,WIPRO,Same IT services regulatory and global policy exposure,Regulatory_Sector,high,positive
+ITC,HINDUNILVR,Same FMCG regulatory and consumption policy exposure,Regulatory_Sector,high,positive
+ITC,NESTLEIND,Same FMCG regulatory and consumption policy exposure,Regulatory_Sector,high,positive
+HINDUNILVR,NESTLEIND,Same FMCG regulatory and consumption policy exposure,Regulatory_Sector,high,positive
+MARUTI,TATAMOTORS,Same auto sector regulatory and emission policy exposure,Regulatory_Sector,high,positive
+MARUTI,M&M,Same auto sector regulatory and emission policy exposure,Regulatory_Sector,high,positive
+TATAMOTORS,M&M,Same auto sector regulatory and emission policy exposure,Regulatory_Sector,high,positive
+ULTRACEMCO,GRASIM,Same cement sector regulatory and infra policy exposure,Regulatory_Sector,high,positive
+JSWSTEEL,TATASTEEL,Same steel sector regulatory and commodity policy exposure,Regulatory_Sector,high,positive
+JSWSTEEL,HINDALCO,Same metals regulatory and commodity exposure,Regulatory_Sector,high,positive
+TATASTEEL,HINDALCO,Same metals regulatory and commodity exposure,Regulatory_Sector,high,positive
+SUNPHARMA,DRREDDY,Same pharma regulatory and FDA exposure,Regulatory_Sector,high,positive
+SUNPHARMA,CIPLA,Same pharma regulatory and FDA exposure,Regulatory_Sector,high,positive
+DRREDDY,CIPLA,Same pharma regulatory and FDA exposure,Regulatory_Sector,high,positive
+BHARTIARTL,RELIANCE,Same telecom regulatory and spectrum policy exposure,Regulatory_Sector,high,positive
+LT,ULTRACEMCO,Infrastructure spending policy affects both,Regulatory_Macro,high,positive
+LT,JSWSTEEL,Infrastructure spending policy affects both,Regulatory_Macro,high,positive
+ULTRACEMCO,JSWSTEEL,Construction demand and infra policy linkage,Regulatory_Macro,high,positive
+HDFCBANK,MARUTI,Interest rate cycle affects both lending and auto demand,Regulatory_Macro,high,positive
+ICICIBANK,MARUTI,Interest rate cycle affects both lending and auto demand,Regulatory_Macro,high,positive
+KOTAKBANK,MARUTI,Interest rate cycle affects both lending and auto demand,Regulatory_Macro,high,positive
+HDFCBANK,BAJFINANCE,Credit cycle impacts both banking and NBFC lending,Regulatory_Macro,high,positive
+ICICIBANK,BAJFINANCE,Credit cycle impacts both banking and NBFC lending,Regulatory_Macro,high,positive
+ITC,TITAN,Consumer spending policy affects discretionary demand,Regulatory_Macro,medium,positive
+HINDUNILVR,TITAN,Consumption trends impact both staples and discretionary,Regulatory_Macro,medium,positive
+RELIANCE,ASIANPAINT,Oil price and petrochemical policy impacts both,Regulatory_Macro,medium,positive
+RELIANCE,ULTRACEMCO,Energy and infrastructure cost policy linkage,Regulatory_Macro,medium,positive

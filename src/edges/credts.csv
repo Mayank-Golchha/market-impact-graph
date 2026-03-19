@@ -1,0 +1,107 @@
+From,To,Mechanism,Category,Strength,Direction
+KOTAKBANK,MARUTI,Auto loan financing for vehicle purchases,Credit,medium,positive
+KOTAKBANK,LT,Project financing for infrastructure developments,Credit,medium,positive
+AXISBANK,MARUTI,Vehicle financing and dealer funding,Credit,medium,positive
+AXISBANK,LT,Infrastructure project financing and working capital,Credit,medium,positive
+TITAN,BAJFINANCE,Consumer financing for jewelry purchases,Credit,medium,positive
+HDFCBANK,TATAMOTORS,Auto and commercial vehicle loan financing,Credit,high,positive
+HDFCBANK,MARUTI,Retail auto loan disbursements for passenger vehicles,Credit,high,positive
+HDFCBANK,LT,Large project and infrastructure financing,Credit,high,positive
+HDFCBANK,ULTRACEMCO,Working capital and capex financing for cement operations,Credit,medium,positive
+HDFCBANK,ADANIENT,Corporate credit lines and project financing,Credit,medium,positive
+HDFCBANK,ADANIPORTS,Port infrastructure project financing,Credit,medium,positive
+HDFCBANK,RELIANCE,Large corporate credit facilities and working capital,Credit,high,positive
+HDFCBANK,TATASTEEL,Working capital and capex loans for steel operations,Credit,medium,positive
+HDFCBANK,JSWSTEEL,Project and working capital financing for steel plants,Credit,medium,positive
+HDFCBANK,BAJFINANCE,Wholesale lending and co-lending arrangements,Credit,medium,positive
+HDFCBANK,SHRIRAMFIN,Wholesale lending and refinancing facilities,Credit,medium,positive
+ICICIBANK,TATAMOTORS,Auto loan financing and dealer funding,Credit,high,positive
+ICICIBANK,MARUTI,Retail vehicle loan disbursements,Credit,high,positive
+ICICIBANK,LT,Infrastructure project financing and term loans,Credit,high,positive
+ICICIBANK,RELIANCE,Large corporate credit and working capital facilities,Credit,high,positive
+ICICIBANK,ADANIENT,Corporate credit lines for diversified operations,Credit,medium,positive
+ICICIBANK,TATASTEEL,Working capital financing for steel manufacturing,Credit,medium,positive
+ICICIBANK,JSWSTEEL,Term loans and working capital for steel operations,Credit,medium,positive
+ICICIBANK,ULTRACEMCO,Capex and working capital financing for cement plants,Credit,medium,positive
+ICICIBANK,BAJFINANCE,Wholesale funding and co-lending partnerships,Credit,medium,positive
+ICICIBANK,HINDALCO,Working capital and capex financing for metals,Credit,medium,positive
+SBIN,LT,Large infrastructure project loans and working capital,Credit,high,positive
+SBIN,TATASTEEL,Working capital and term loans for steel operations,Credit,high,positive
+SBIN,JSWSTEEL,Project financing and working capital for steel plants,Credit,high,positive
+SBIN,NTPC,Long term project loans for power plant construction,Credit,high,positive
+SBIN,POWERGRID,Infrastructure financing for transmission networks,Credit,high,positive
+SBIN,COALINDIA,Working capital facilities for coal operations,Credit,medium,positive
+SBIN,ONGC,Revolving credit and working capital facilities,Credit,high,positive
+SBIN,ADANIENT,Corporate credit and project financing,Credit,medium,positive
+SBIN,ADANIPORTS,Port infrastructure and logistics financing,Credit,medium,positive
+SBIN,RELIANCE,Large corporate credit facilities,Credit,high,positive
+SBIN,BAJFINANCE,Wholesale refinancing and co-lending arrangements,Credit,medium,positive
+SBIN,SHRIRAMFIN,Wholesale lending and term loan facilities,Credit,medium,positive
+SBIN,TATAMOTORS,Auto and commercial vehicle loan financing,Credit,medium,positive
+SBIN,ULTRACEMCO,Project and working capital financing for cement,Credit,medium,positive
+SBIN,HINDALCO,Term loans and working capital for aluminium operations,Credit,medium,positive
+AXISBANK,TATAMOTORS,Auto and commercial vehicle financing,Credit,medium,positive
+AXISBANK,RELIANCE,Corporate credit and working capital facilities,Credit,medium,positive
+AXISBANK,ADANIENT,Corporate credit lines for conglomerate operations,Credit,medium,positive
+AXISBANK,TATASTEEL,Working capital financing for steel operations,Credit,medium,positive
+AXISBANK,ULTRACEMCO,Capex financing for cement capacity expansion,Credit,medium,positive
+AXISBANK,BAJFINANCE,Wholesale funding and co-lending arrangements,Credit,medium,positive
+AXISBANK,SHRIRAMFIN,Wholesale lending and refinancing facilities,Credit,medium,positive
+KOTAKBANK,TATAMOTORS,Auto and commercial vehicle loan financing,Credit,medium,positive
+KOTAKBANK,RELIANCE,Corporate banking and credit facilities,Credit,medium,positive
+KOTAKBANK,BAJFINANCE,Wholesale funding and co-lending arrangements,Credit,medium,positive
+KOTAKBANK,TATASTEEL,Working capital and term loans for steel operations,Credit,medium,positive
+INDUSINDBK,TATAMOTORS,Commercial vehicle and auto loan financing,Credit,medium,positive
+INDUSINDBK,MARUTI,Retail auto loan financing for passenger vehicles,Credit,medium,positive
+INDUSINDBK,BAJFINANCE,Wholesale lending and co-lending arrangements,Credit,medium,positive
+INDUSINDBK,SHRIRAMFIN,Wholesale funding and term loan facilities,Credit,low,positive
+BAJFINANCE,MARUTI,Consumer auto loan financing through dealer network,Credit,high,positive
+BAJFINANCE,TATAMOTORS,Auto loan and consumer durable financing,Credit,medium,positive
+BAJFINANCE,TITAN,Consumer financing for watches and jewellery purchases,Credit,medium,positive
+BAJFINANCE,TRENT,Consumer credit for retail fashion purchases,Credit,low,positive
+BAJFINANCE,HINDUNILVR,Working capital financing for FMCG distribution,Credit,low,positive
+SHRIRAMFIN,TATAMOTORS,Commercial vehicle loan financing,Credit,high,positive
+SHRIRAMFIN,BAJAJ-AUTO,Two-wheeler and three-wheeler loan financing,Credit,high,positive
+SHRIRAMFIN,M&M,Tractor and utility vehicle loan financing,Credit,medium,positive
+SHRIRAMFIN,EICHERMOT,Commercial vehicle loan disbursements,Credit,medium,positive
+BAJAJFINSV,BAJFINANCE,Parent holding company funding Bajaj Finance operations,Credit,high,positive
+BAJAJFINSV,MARUTI,Auto loan financing through Bajaj Finance arm,Credit,medium,positive
+HDFCLIFE,HDFCBANK,Insurance premium float invested via HDFC Bank channels,Credit,low,positive
+SBILIFE,SBIN,Insurance premium float and investment linkage via SBI,Credit,low,positive
+HDFCBANK,EICHERMOT,Commercial vehicle and two-wheeler financing,Credit,medium,positive
+HDFCBANK,BAJAJ-AUTO,Two-wheeler retail loan financing,Credit,medium,positive
+HDFCBANK,M&M,Tractor and UV auto loan financing,Credit,medium,positive
+ICICIBANK,BAJAJ-AUTO,Two-wheeler and three-wheeler loan financing,Credit,medium,positive
+ICICIBANK,M&M,Tractor and utility vehicle loan financing,Credit,medium,positive
+ICICIBANK,EICHERMOT,Commercial vehicle financing,Credit,medium,positive
+SBIN,BAJAJ-AUTO,Two-wheeler loan financing through retail banking,Credit,medium,positive
+SBIN,M&M,Tractor and UV financing for rural and semi-urban markets,Credit,medium,positive
+HDFCBANK,SUNPHARMA,Working capital financing for pharma manufacturing,Credit,low,positive
+HDFCBANK,CIPLA,Working capital and capex financing for pharma operations,Credit,low,positive
+HDFCBANK,DRREDDY,Corporate credit and working capital facilities,Credit,low,positive
+ICICIBANK,SUNPHARMA,Working capital financing for pharmaceutical operations,Credit,low,positive
+ICICIBANK,DRREDDY,Corporate credit facilities for pharma exports,Credit,low,positive
+HDFCBANK,BHARTIARTL,Large corporate credit facilities for telecom capex,Credit,medium,positive
+ICICIBANK,BHARTIARTL,Term loans and working capital for telecom infrastructure,Credit,medium,positive
+SBIN,BHARTIARTL,Long term project financing for network expansion,Credit,medium,positive
+HDFCBANK,NTPC,Long term project loans for power generation assets,Credit,medium,positive
+ICICIBANK,NTPC,Infrastructure financing for power plant construction,Credit,medium,positive
+HDFCBANK,POWERGRID,Infrastructure financing for transmission network,Credit,medium,positive
+ICICIBANK,POWERGRID,Long term project loans for grid infrastructure,Credit,medium,positive
+HDFCBANK,HINDALCO,Term loans and working capital for aluminium smelting,Credit,medium,positive
+ICICIBANK,HINDALCO,Working capital and capex financing for metals,Credit,medium,positive
+HDFCBANK,ASIANPAINT,Working capital financing for paints distribution,Credit,low,positive
+ICICIBANK,ASIANPAINT,Working capital and capex credit for paint manufacturing,Credit,low,positive
+HDFCBANK,ITC,Working capital financing for FMCG and agri operations,Credit,medium,positive
+ICICIBANK,ITC,Corporate credit and working capital facilities,Credit,medium,positive
+SBIN,ITC,Working capital financing for agri-commodity operations,Credit,medium,positive
+HDFCBANK,TCS,Working capital and operational financing for IT services,Credit,medium,positive
+SBIN,INFY,Corporate credit lines for global expansion,Credit,low,positive
+ICICIBANK,HCLTECH,Short term loans and trade finance,Credit,low,positive
+AXISBANK,TECHM,Working capital and bill discounting facilities,Credit,low,positive
+HDFCBANK,NESTLEIND,Supply chain financing for FMCG operations,Credit,low,positive
+AXISBANK,BRITANNIA,Working capital facilities for food processing,Credit,medium,positive
+SBIN,GRASIM,Long term project loans for manufacturing facilities,Credit,medium,positive
+ICICIBANK,BPCL,Working capital for petroleum imports,Credit,high,positive
+HDFCBANK,APOLLOHOSP,Capex financing for hospital infrastructure,Credit,medium,positive
+SBIN,DIVISLAB,Export credit and working capital for API manufacturing,Credit,medium,positive

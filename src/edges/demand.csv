@@ -1,0 +1,30 @@
+From,To,Mechanism,Category,Strength,Direction
+KOTAKBANK,BAJFINANCE,Compete for retail lending and consumer finance,Demand,high,negative
+KOTAKBANK,HDFCBANK,Compete for deposits and loan market share,Demand,high,negative
+KOTAKBANK,HDFCLIFE,Bancassurance distribution partnership for insurance products,Demand,medium,positive
+ITC,HINDUNILVR,Direct competition in FMCG consumer products,Demand,high,negative
+ITC,NESTLEIND,Compete for shelf space and consumer wallet,Demand,medium,negative
+ITC,RELIANCE,Compete in retail and FMCG distribution,Demand,medium,negative
+ITC,TRENT,Compete in fashion retail segment,Demand,low,negative
+AXISBANK,HDFCBANK,Compete for corporate and retail banking,Demand,high,negative
+AXISBANK,ICICIBANK,Direct competition across all banking segments,Demand,high,negative
+AXISBANK,BAJFINANCE,Compete in consumer lending and credit cards,Demand,high,negative
+ASIANPAINT,GRASIM,Compete in paints segment via Grasim's Birla Opus,Demand,high,negative
+ASIANPAINT,RELIANCE,Competition in decorative paints business,Demand,medium,negative
+MARUTI,TATAMOTORS,Direct competition in passenger vehicle segment,Demand,high,negative
+MARUTI,M&M,Compete in UV and passenger vehicle market,Demand,high,negative
+MARUTI,BAJAJ-AUTO,Indirect competition for consumer vehicle spending,Demand,medium,negative
+MARUTI,BAJFINANCE,Vehicle financing partner for retail customers,Demand,high,positive
+HCLTECH,TCS,Compete for IT services and consulting contracts,Demand,high,negative
+HCLTECH,INFY,Direct competition in global IT outsourcing,Demand,high,negative
+HCLTECH,WIPRO,Compete for enterprise software services,Demand,high,negative
+HCLTECH,LTIM,Compete for digital transformation projects,Demand,medium,negative
+HCLTECH,TECHM,Compete for IT infrastructure services,Demand,medium,negative
+SUNPHARMA,CIPLA,Compete in generic pharmaceuticals market,Demand,high,negative
+SUNPHARMA,DRREDDY,Competition in domestic and export pharma,Demand,high,negative
+SUNPHARMA,DIVISLAB,Compete for API and formulations business,Demand,medium,negative
+TITAN,TRENT,Compete for premium retail consumer spending,Demand,medium,negative
+TITAN,HINDUNILVR,Indirect competition for discretionary consumer spending,Demand,low,negative
+TITAN,ITC,Compete in premium retail and lifestyle,Demand,low,negative
+ULTRACEMCO,GRASIM,Direct competition in cement manufacturing,Demand,high,negative
+ULTRACEMCO,JSWSTEEL,Compete indirectly for construction material demand,Demand,medium,negative

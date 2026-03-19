@@ -1,0 +1,106 @@
+From,To,Mechanism,Category,Strength,Direction
+BAJAJ-AUTO,EICHERMOT,Same industry: Automobile and Auto Components,Industry,high,positive
+BAJAJ-AUTO,M&M,Same industry: Automobile and Auto Components,Industry,high,positive
+BAJAJ-AUTO,MARUTI,Same industry: Automobile and Auto Components,Industry,high,positive
+BAJAJ-AUTO,TMPV,Same industry: Automobile and Auto Components,Industry,high,positive
+EICHERMOT,M&M,Same industry: Automobile and Auto Components,Industry,high,positive
+EICHERMOT,MARUTI,Same industry: Automobile and Auto Components,Industry,high,positive
+EICHERMOT,TMPV,Same industry: Automobile and Auto Components,Industry,high,positive
+M&M,MARUTI,Same industry: Automobile and Auto Components,Industry,high,positive
+M&M,TMPV,Same industry: Automobile and Auto Components,Industry,high,positive
+MARUTI,TMPV,Same industry: Automobile and Auto Components,Industry,high,positive
+GRASIM,ULTRACEMCO,Same industry: Construction Materials,Industry,low,positive
+ASIANPAINT,TITAN,Same industry: Consumer Durables,Industry,low,positive
+ETERNAL,TRENT,Same industry: Consumer Services,Industry,low,positive
+HINDUNILVR,ITC,Same industry: Fast Moving Consumer Goods,Industry,medium,positive
+HINDUNILVR,NESTLEIND,Same industry: Fast Moving Consumer Goods,Industry,medium,positive
+HINDUNILVR,TATACONSUM,Same industry: Fast Moving Consumer Goods,Industry,medium,positive
+ITC,NESTLEIND,Same industry: Fast Moving Consumer Goods,Industry,medium,positive
+ITC,TATACONSUM,Same industry: Fast Moving Consumer Goods,Industry,medium,positive
+NESTLEIND,TATACONSUM,Same industry: Fast Moving Consumer Goods,Industry,medium,positive
+AXISBANK,BAJFINANCE,Same industry: Financial Services,Industry,high,positive
+AXISBANK,BAJAJFINSV,Same industry: Financial Services,Industry,high,positive
+AXISBANK,HDFCBANK,Same industry: Financial Services,Industry,high,positive
+AXISBANK,HDFCLIFE,Same industry: Financial Services,Industry,high,positive
+AXISBANK,ICICIBANK,Same industry: Financial Services,Industry,high,positive
+AXISBANK,JIOFIN,Same industry: Financial Services,Industry,high,positive
+AXISBANK,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+AXISBANK,SBILIFE,Same industry: Financial Services,Industry,high,positive
+AXISBANK,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+AXISBANK,SBIN,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,BAJAJFINSV,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,HDFCBANK,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,HDFCLIFE,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,ICICIBANK,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,JIOFIN,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,SBILIFE,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+BAJFINANCE,SBIN,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,HDFCBANK,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,HDFCLIFE,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,ICICIBANK,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,JIOFIN,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,SBILIFE,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+BAJAJFINSV,SBIN,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,HDFCLIFE,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,ICICIBANK,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,JIOFIN,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,SBILIFE,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+HDFCBANK,SBIN,Same industry: Financial Services,Industry,high,positive
+HDFCLIFE,ICICIBANK,Same industry: Financial Services,Industry,high,positive
+HDFCLIFE,JIOFIN,Same industry: Financial Services,Industry,high,positive
+HDFCLIFE,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+HDFCLIFE,SBILIFE,Same industry: Financial Services,Industry,high,positive
+HDFCLIFE,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+HDFCLIFE,SBIN,Same industry: Financial Services,Industry,high,positive
+ICICIBANK,JIOFIN,Same industry: Financial Services,Industry,high,positive
+ICICIBANK,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+ICICIBANK,SBILIFE,Same industry: Financial Services,Industry,high,positive
+ICICIBANK,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+ICICIBANK,SBIN,Same industry: Financial Services,Industry,high,positive
+JIOFIN,KOTAKBANK,Same industry: Financial Services,Industry,high,positive
+JIOFIN,SBILIFE,Same industry: Financial Services,Industry,high,positive
+JIOFIN,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+JIOFIN,SBIN,Same industry: Financial Services,Industry,high,positive
+KOTAKBANK,SBILIFE,Same industry: Financial Services,Industry,high,positive
+KOTAKBANK,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+KOTAKBANK,SBIN,Same industry: Financial Services,Industry,high,positive
+SBILIFE,SHRIRAMFIN,Same industry: Financial Services,Industry,high,positive
+SBILIFE,SBIN,Same industry: Financial Services,Industry,high,positive
+SHRIRAMFIN,SBIN,Same industry: Financial Services,Industry,high,positive
+APOLLOHOSP,CIPLA,Same industry: Healthcare,Industry,medium,positive
+APOLLOHOSP,DRREDDY,Same industry: Healthcare,Industry,medium,positive
+APOLLOHOSP,MAXHEALTH,Same industry: Healthcare,Industry,medium,positive
+APOLLOHOSP,SUNPHARMA,Same industry: Healthcare,Industry,medium,positive
+CIPLA,DRREDDY,Same industry: Healthcare,Industry,medium,positive
+CIPLA,MAXHEALTH,Same industry: Healthcare,Industry,medium,positive
+CIPLA,SUNPHARMA,Same industry: Healthcare,Industry,medium,positive
+DRREDDY,MAXHEALTH,Same industry: Healthcare,Industry,medium,positive
+DRREDDY,SUNPHARMA,Same industry: Healthcare,Industry,medium,positive
+MAXHEALTH,SUNPHARMA,Same industry: Healthcare,Industry,medium,positive
+HCLTECH,INFY,Same industry: Information Technology,Industry,high,positive
+HCLTECH,TCS,Same industry: Information Technology,Industry,high,positive
+HCLTECH,TECHM,Same industry: Information Technology,Industry,high,positive
+HCLTECH,WIPRO,Same industry: Information Technology,Industry,high,positive
+INFY,TCS,Same industry: Information Technology,Industry,high,positive
+INFY,TECHM,Same industry: Information Technology,Industry,high,positive
+INFY,WIPRO,Same industry: Information Technology,Industry,high,positive
+TCS,TECHM,Same industry: Information Technology,Industry,high,positive
+TCS,WIPRO,Same industry: Information Technology,Industry,high,positive
+TECHM,WIPRO,Same industry: Information Technology,Industry,high,positive
+ADANIENT,HINDALCO,Same industry: Metals & Mining,Industry,medium,positive
+ADANIENT,JSWSTEEL,Same industry: Metals & Mining,Industry,medium,positive
+ADANIENT,TATASTEEL,Same industry: Metals & Mining,Industry,medium,positive
+HINDALCO,JSWSTEEL,Same industry: Metals & Mining,Industry,medium,positive
+HINDALCO,TATASTEEL,Same industry: Metals & Mining,Industry,medium,positive
+JSWSTEEL,TATASTEEL,Same industry: Metals & Mining,Industry,medium,positive
+COALINDIA,ONGC,Same industry: Oil Gas & Consumable Fuels,Industry,medium,positive
+COALINDIA,RELIANCE,Same industry: Oil Gas & Consumable Fuels,Industry,medium,positive
+ONGC,RELIANCE,Same industry: Oil Gas & Consumable Fuels,Industry,medium,positive
+NTPC,POWERGRID,Same industry: Power,Industry,low,positive
+ADANIPORTS,INDIGO,Same industry: Services,Industry,low,positive
